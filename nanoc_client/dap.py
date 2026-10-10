@@ -172,8 +172,18 @@ class DapServer:
     _do_launch = _do_attach
 
     def _do_configurationDone(self, req, args):
-        self._remote_request(p.Command.ATTACH, 1, 0)
+        cmd, data = self._remote_request(p.Command.ATTACH, 1, 0)
         self.send_response(req)
+        # notify the editor that the target is now stopped (attach pauses it)
+        if data and len(data) >= 4 and data[1] == 1:
+            self._emit_stopped("entry", data[3])
+
+    def _emit_stopped(self, reason, line):
+        if line:
+            self._last_line = line
+        self.send_event("stopped", {
+            "reason": reason, "threadId": 1, "allThreadsStopped": True,
+        })
 
     def _do_setBreakpoints(self, req, args):
         src = args.get("source") or {}
@@ -242,16 +252,24 @@ class DapServer:
         self.send_response(req, body={"allThreadsContinued": True})
 
     def _do_next(self, req, args):
-        self._remote_request(p.Command.STEP_OVER)
+        cmd, data = self._remote_request(p.Command.STEP_OVER)
         self.send_response(req)
+        self._step_stopped(data)
 
     def _do_stepIn(self, req, args):
-        self._remote_request(p.Command.STEP)
+        cmd, data = self._remote_request(p.Command.STEP)
         self.send_response(req)
+        self._step_stopped(data)
 
     def _do_stepOut(self, req, args):
-        self._remote_request(p.Command.STEP_OUT)
+        cmd, data = self._remote_request(p.Command.STEP_OUT)
         self.send_response(req)
+        self._step_stopped(data)
+
+    def _step_stopped(self, data):
+        # step response: [status, mode, reason, line, pc]
+        if data and len(data) >= 4:
+            self._emit_stopped("step", data[3])
 
     def _do_pause(self, req, args):
         self._remote_request(p.Command.HALT)
