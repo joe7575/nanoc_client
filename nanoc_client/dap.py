@@ -169,13 +169,28 @@ class DapServer:
     def _do_upload(self, req, args):
         data = args.get("text", "").encode("utf-8")
         words = [int(b) for b in data]
-        self._remote_request(p.Command.PROG_SET, len(words), *words)
+        cmd, resp = self._remote_request(p.Command.PROG_SET, len(words), *words)
+        status = resp[0] if resp else 1
+        msg = ""
+        if len(resp) >= 2:
+            n = resp[1]
+            msg = bytes(b & 0xFF for b in resp[2:2 + n]).decode("utf-8", "replace")
+        if msg:
+            self.send_event("output", {
+                "category": "stderr" if status != 0 else "stdout",
+                "output": msg if msg.endswith("\n") else msg + "\n",
+            })
+        if status != 0:
+            self._remote_request(p.Command.ATTACH, 1, 0)
+            self.send_response(req, success=False,
+                                message="compile failed: " + (msg.strip() or "unknown error"))
+            return
         # compiling cleared the breakpoints; re-apply them
         self._remote_request(p.Command.BP_CLR_ALL)
         for line in self._breakpoints:
             self._remote_request(p.Command.BP_SET, line)
         cmd, state = self._remote_request(p.Command.ATTACH, 1, 0)
-        self.send_response(req)
+        self.send_response(req, body={"message": msg})
         if state and len(state) >= 4 and state[1] == 1:
             self._emit_stopped("entry", state[3])
 

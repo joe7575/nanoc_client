@@ -175,7 +175,11 @@ class MockServer:
         elif cmd == p.Command.PROG_SET:
             n = data[0] if data else 0
             self.program = bytes(b & 0xFF for b in data[1:1 + n]).decode("utf-8", "replace")
-            resp = [int(cmd), int(p.Status.OK)]
+            if "SYNTAX_ERROR" in self.program:
+                msg = "Error in line 1: syntax error\n"
+                resp = [int(cmd), int(p.Status.PARAM), len(msg)] + [ord(c) for c in msg]
+            else:
+                resp = [int(cmd), int(p.Status.OK), 0]
         else:
             resp = [int(cmd), int(p.Status.UNKNOWN_CMD)]
 

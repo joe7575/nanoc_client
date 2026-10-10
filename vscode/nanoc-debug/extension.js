@@ -6,6 +6,12 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
+let outputChannel;
+
+function log(line) {
+  if (outputChannel) outputChannel.appendLine(line);
+}
+
 function resolveCommand(configuration) {
   if (configuration && configuration.dapPath) {
     return configuration.dapPath;
@@ -58,6 +64,8 @@ class NanocConfigProvider {
 }
 
 function activate(context) {
+  outputChannel = vscode.window.createOutputChannel('NanoC');
+  context.subscriptions.push(outputChannel);
   context.subscriptions.push(
     vscode.debug.registerDebugAdapterDescriptorFactory('nanoc', new NanocAdapterFactory())
   );
@@ -91,9 +99,15 @@ async function uploadProgram() {
   }
   const text = editor.document.getText();
   try {
-    await session.customRequest('nanoc/upload', { text });
-    vscode.window.setStatusBarMessage('NanoC: program uploaded', 3000);
+    const res = await session.customRequest('nanoc/upload', { text });
+    log('Uploaded ' + editor.document.fileName);
+    if (res && res.message) log(res.message);
+    outputChannel.show(true);
+    vscode.window.setStatusBarMessage(
+      'NanoC: uploaded ' + path.basename(editor.document.fileName), 3000);
   } catch (err) {
+    log('Upload failed: ' + err.message);
+    outputChannel.show(true);
     vscode.window.showErrorMessage('NanoC upload failed: ' + err.message);
   }
 }
@@ -103,12 +117,16 @@ async function downloadProgram() {
   if (!session) return;
   try {
     const res = await session.customRequest('nanoc/download', {});
+    log('Downloaded program (' + (res.text || '').length + ' bytes)');
+    outputChannel.show(true);
     const doc = await vscode.workspace.openTextDocument({
       language: 'nanoc',
       content: res.text || '',
     });
     await vscode.window.showTextDocument(doc, { preview: false });
   } catch (err) {
+    log('Download failed: ' + err.message);
+    outputChannel.show(true);
     vscode.window.showErrorMessage('NanoC download failed: ' + err.message);
   }
 }

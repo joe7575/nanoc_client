@@ -95,7 +95,9 @@ class TestDapAdapter(unittest.TestCase):
         self.assertTrue(r["success"])
         r = self._request(12, "nanoc/download")
         self.assertEqual(r["body"]["text"], "int32 x = 5\n")
-        self.assertTrue(self._request(13, "disconnect")["success"])
+        r = self._request(13, "nanoc/upload", {"text": "SYNTAX_ERROR\n"})
+        self.assertFalse(r["success"])
+        self.assertTrue(self._request(14, "disconnect")["success"])
 
 
 if __name__ == "__main__":
