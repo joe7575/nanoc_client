@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nanoc-client"
+version = "0.1.0"
+description = "External terminal and source-level debugger client for the NanoC computer in Luanti/Minetest."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "AGPL-3.0-or-later" }
+authors = [{ name = "Joachim Stolberg" }]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+]
+
+[project.scripts]
+nanoc-client = "nanoc_client.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["nanoc_client*"]
