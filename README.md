@@ -45,15 +45,14 @@ python -m unittest discover -s tests
 This repo ships a minimal debugger extension (`vscode/nanoc-debug`) that
 starts the `nanoc-dap` adapter and adds syntax highlighting for `.nanoc`/`.nc`.
 
-Install (no `vsce` needed):
+Install (build a VSIX, no `vsce` needed), then restart VS Code:
 
 ```bash
-mkdir -p ~/.vscode/extensions
-ln -sfn ~/Projekte/nanoc_client/vscode/nanoc-debug ~/.vscode/extensions/nanoc-debug
+~/Projekte/nanoc_client/vscode/build-vsix.sh
+code --install-extension ~/Projekte/nanoc_client/vscode/nanoc-debug.vsix
 ```
 
-Reload VS Code (**Developer: Reload Window**), open the matching source file
-locally, and add a `launch.json` configuration:
+Open the matching source file locally and add a `launch.json` configuration:
 
 ```json
 {

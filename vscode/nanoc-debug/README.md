@@ -4,14 +4,17 @@ Minimal VS Code debugger extension that starts the `nanoc-dap` adapter
 (from `nanoc_client`). It also provides basic syntax highlighting for
 `.nanoc` / `.nc` files.
 
-## Install (from this folder, no vsce needed)
+## Install
+
+Build and install the VSIX (no `vsce` needed), then restart VS Code:
 
 ```bash
-mkdir -p ~/.vscode/extensions
-ln -sfn ~/Projekte/nanoc_client/vscode/nanoc-debug ~/.vscode/extensions/nanoc-debug
+~/Projekte/nanoc_client/vscode/build-vsix.sh
+code --install-extension ~/Projekte/nanoc_client/vscode/nanoc-debug.vsix
 ```
 
-Then reload VS Code (**Developer: Reload Window**).
+(Simply symlinking the folder into `~/.vscode/extensions` is not always picked
+up by VS Code; the VSIX install is reliable.)
 
 The extension looks for the adapter in this order:
 
