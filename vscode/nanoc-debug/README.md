@@ -46,3 +46,15 @@ Open the same `.nanoc` source file locally that is compiled on the controller
 
 Start it with F5. Breakpoints, stepping, the call stack and the Globals/Locals
 variables view are available; `printf` output appears in the Debug Console.
+
+## Edit / upload / download
+
+While a debug session is active:
+
+- **NanoC: Upload Program to Controller** (Ctrl+Alt+U) sends the active editor
+  to the controller and recompiles it (breakpoints are re-applied automatically).
+- **NanoC: Download Program from Controller** opens the controller's current
+  program in a new editor tab.
+
+Typical loop: attach (F5) → download → edit/save → upload (Ctrl+Alt+U) →
+Continue (F5) → debug.

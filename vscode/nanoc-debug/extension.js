@@ -64,6 +64,53 @@ function activate(context) {
   context.subscriptions.push(
     vscode.debug.registerDebugConfigurationProvider('nanoc', new NanocConfigProvider())
   );
+  context.subscriptions.push(
+    vscode.commands.registerCommand('nanoc.upload', uploadProgram)
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand('nanoc.download', downloadProgram)
+  );
+}
+
+function activeSession() {
+  const session = vscode.debug.activeDebugSession;
+  if (!session || session.type !== 'nanoc') {
+    vscode.window.showErrorMessage('NanoC: no active debug session. Start one (F5) first.');
+    return null;
+  }
+  return session;
+}
+
+async function uploadProgram() {
+  const session = activeSession();
+  if (!session) return;
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    vscode.window.showErrorMessage('NanoC: no active editor.');
+    return;
+  }
+  const text = editor.document.getText();
+  try {
+    await session.customRequest('nanoc/upload', { text });
+    vscode.window.setStatusBarMessage('NanoC: program uploaded', 3000);
+  } catch (err) {
+    vscode.window.showErrorMessage('NanoC upload failed: ' + err.message);
+  }
+}
+
+async function downloadProgram() {
+  const session = activeSession();
+  if (!session) return;
+  try {
+    const res = await session.customRequest('nanoc/download', {});
+    const doc = await vscode.workspace.openTextDocument({
+      language: 'nanoc',
+      content: res.text || '',
+    });
+    await vscode.window.showTextDocument(doc, { preview: false });
+  } catch (err) {
+    vscode.window.showErrorMessage('NanoC download failed: ' + err.message);
+  }
 }
 
 function deactivate() {}

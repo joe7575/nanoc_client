@@ -89,7 +89,13 @@ class TestDapAdapter(unittest.TestCase):
         self.assertIn("count", names)
         r = self._request(9, "continue", {"threadId": 1})
         self.assertTrue(r["success"])
-        self.assertTrue(self._request(10, "disconnect")["success"])
+        r = self._request(10, "nanoc/download")
+        self.assertIn("int32", r["body"]["text"])
+        r = self._request(11, "nanoc/upload", {"text": "int32 x = 5\n"})
+        self.assertTrue(r["success"])
+        r = self._request(12, "nanoc/download")
+        self.assertEqual(r["body"]["text"], "int32 x = 5\n")
+        self.assertTrue(self._request(13, "disconnect")["success"])
 
 
 if __name__ == "__main__":

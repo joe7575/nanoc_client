@@ -67,8 +67,11 @@ Open the matching source file locally and add a `launch.json` configuration:
 ```
 
 Start with F5: breakpoints, stepping, call stack, Globals/Locals and `printf`
-output (Debug Console) all work. Other DAP clients (nvim-dap, Emacs dap-mode)
-can use the `nanoc-dap` executable directly.
+output (Debug Console) all work. While attached, **NanoC: Upload Program to
+Controller** (Ctrl+Alt+U) pushes the active editor to the controller
+(+recompile), and **NanoC: Download Program from Controller** opens the
+controller's program. Other DAP clients (nvim-dap, Emacs dap-mode) can use the
+`nanoc-dap` executable directly.
 
 ## Status
 

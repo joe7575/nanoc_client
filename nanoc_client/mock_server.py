@@ -44,6 +44,7 @@ class MockServer:
         self.halted = False
         self.counter = 0
         self.breakpoints = set()
+        self.program = "int32 a = 1\nprintf(\"%d\\n\", a)\n"
         self.variables = [("count", p.VarKind.INT, 0), ("name", p.VarKind.STR, 0)]
 
     # -- lifecycle ----------------------------------------------------------
@@ -168,6 +169,13 @@ class MockServer:
             pass
         elif cmd == p.Command.BACKTRACE:
             resp = [int(cmd), int(p.Status.OK), 2, 2, 10, 1, 0]
+        elif cmd == p.Command.PROG_GET:
+            raw = self.program.encode("utf-8")
+            resp = [int(cmd), int(p.Status.OK), len(raw)] + list(raw)
+        elif cmd == p.Command.PROG_SET:
+            n = data[0] if data else 0
+            self.program = bytes(b & 0xFF for b in data[1:1 + n]).decode("utf-8", "replace")
+            resp = [int(cmd), int(p.Status.OK)]
         else:
             resp = [int(cmd), int(p.Status.UNKNOWN_CMD)]
 

@@ -43,6 +43,8 @@ class Command(IntEnum):
     VAR_WRITE = 0x0D
     ARR_READ = 0x0E
     BACKTRACE = 0x0F
+    PROG_GET = 0x20
+    PROG_SET = 0x21
 
 
 class Event(IntEnum):

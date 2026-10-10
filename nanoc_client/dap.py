@@ -31,6 +31,7 @@ class DapServer:
         self._resp_cond = threading.Condition(self._resp_lock)
         self._responses = {}
         self._source_path = None
+        self._breakpoints = []
         self._last_line = 1
         self._running = True
         self._reader = None
@@ -146,6 +147,16 @@ class DapServer:
     def handle(self, req):
         cmd = req.get("command")
         args = req.get("arguments") or {}
+        custom = {
+            "nanoc/upload": self._do_upload,
+            "nanoc/download": self._do_download,
+        }
+        if cmd in custom:
+            try:
+                custom[cmd](req, args)
+            except (DapError, NanocError, OSError) as err:
+                self.send_response(req, success=False, message=str(err))
+            return
         handler = getattr(self, "_do_" + cmd, None)
         if handler is None:
             self.send_response(req, success=False, message=f"unsupported: {cmd}")
@@ -154,6 +165,27 @@ class DapServer:
             handler(req, args)
         except (DapError, NanocError, OSError) as err:
             self.send_response(req, success=False, message=str(err))
+
+    def _do_upload(self, req, args):
+        data = args.get("text", "").encode("utf-8")
+        words = [int(b) for b in data]
+        self._remote_request(p.Command.PROG_SET, len(words), *words)
+        # compiling cleared the breakpoints; re-apply them
+        self._remote_request(p.Command.BP_CLR_ALL)
+        for line in self._breakpoints:
+            self._remote_request(p.Command.BP_SET, line)
+        cmd, state = self._remote_request(p.Command.ATTACH, 1, 0)
+        self.send_response(req)
+        if state and len(state) >= 4 and state[1] == 1:
+            self._emit_stopped("entry", state[3])
+
+    def _do_download(self, req, args):
+        cmd, data = self._remote_request(p.Command.PROG_GET)
+        text = ""
+        if data and data[0] == 0 and len(data) >= 2:
+            n = data[1]
+            text = bytes(b & 0xFF for b in data[2:2 + n]).decode("utf-8", "replace")
+        self.send_response(req, body={"text": text})
 
     def _do_initialize(self, req, args):
         self.send_response(req, body={
@@ -191,6 +223,7 @@ class DapServer:
             self._source_path = src["path"]
         self._remote_request(p.Command.BP_CLR_ALL)
         result = []
+        self._breakpoints = []
         for bp in args.get("breakpoints", []):
             line = int(bp.get("line", 0))
             cmd, data = self._remote_request(p.Command.BP_SET, line)
@@ -198,6 +231,8 @@ class DapServer:
             actual = actual - 0x100000000 if actual >= 0x80000000 else actual
             ok = (data[0] == 0 and actual >= 0)
             result.append({"verified": ok, "line": actual if ok else line})
+            if ok:
+                self._breakpoints.append(actual)
         self.send_response(req, body={"breakpoints": result})
 
     def _do_threads(self, req, args):
