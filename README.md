@@ -70,8 +70,10 @@ Start with F5: breakpoints, stepping, call stack, Globals/Locals and `printf`
 output (Debug Console) all work. While attached, **NanoC: Upload Program to
 Controller** (Ctrl+Alt+U) pushes the active editor to the controller
 (+recompile), and **NanoC: Download Program from Controller** opens the
-controller's program. Other DAP clients (nvim-dap, Emacs dap-mode) can use the
-`nanoc-dap` executable directly.
+controller's program. `.nanoc`/`.nc` files are also linted on save (via the
+local `nanoc-check`); problems appear in the Problems panel and jump to the
+line on click (command **NanoC: Check Program (lint)**). Other DAP clients
+(nvim-dap, Emacs dap-mode) can use the `nanoc-dap` executable directly.
 
 ## Status
 

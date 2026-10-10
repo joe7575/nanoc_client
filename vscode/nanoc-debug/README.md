@@ -58,3 +58,10 @@ While a debug session is active:
 
 Typical loop: attach (F5) → download → edit/save → upload (Ctrl+Alt+U) →
 Continue (F5) → debug.
+
+## Linting
+
+`.nanoc` / `.nc` files are linted automatically on save (and on open) via the
+local `nanoc-check` (unbalanced brackets, unknown functions, undeclared
+variables). Findings show in the **Problems** panel and jump to the line on
+double-click. Run it manually with **NanoC: Check Program (lint)**.

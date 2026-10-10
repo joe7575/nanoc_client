@@ -5,8 +5,10 @@ const vscode = require('vscode');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const cp = require('child_process');
 
 let outputChannel;
+let diagnostics;
 
 function log(line) {
   if (outputChannel) outputChannel.appendLine(line);
@@ -78,6 +80,48 @@ function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('nanoc.download', downloadProgram)
   );
+  context.subscriptions.push(
+    vscode.commands.registerCommand('nanoc.check', checkProgram)
+  );
+  diagnostics = vscode.languages.createDiagnosticCollection('nanoc');
+  context.subscriptions.push(diagnostics);
+  context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(runCheck));
+  vscode.workspace.textDocuments.forEach(runCheck);
+}
+
+function resolveChecker() {
+  const configured = vscode.workspace.getConfiguration('nanoc').get('checkPath');
+  if (configured) return configured;
+  const candidate = path.join(os.homedir(), '.local', 'venvs', 'nanoc', 'bin', 'nanoc-check');
+  if (fs.existsSync(candidate)) return candidate;
+  return 'nanoc-check';
+}
+
+function runCheck(document) {
+  if (!document || (document.languageId !== 'nanoc' && !/\.(nanoc|nc)$/.test(document.fileName))) {
+    return;
+  }
+  if (document.isUntitled || !document.fileName) return;
+  cp.execFile(resolveChecker(), [document.fileName], (err, stdout, stderr) => {
+    const out = (stdout || '') + (stderr || '');
+    const items = [];
+    for (const line of out.split(/\r?\n/)) {
+      const m = line.match(/^(.+?):(\d+):\s*error:\s*(.*)$/);
+      if (!m) continue;
+      const ln = Math.max(0, parseInt(m[2], 10) - 1);
+      items.push(new vscode.Diagnostic(
+        new vscode.Range(ln, 0, ln, 1000), m[3], vscode.DiagnosticSeverity.Error));
+    }
+    diagnostics.set(document.uri, items);
+  });
+}
+
+function checkProgram() {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) return;
+  runCheck(editor.document);
+  vscode.window.setStatusBarMessage(
+    'NanoC: checked ' + path.basename(editor.document.fileName), 3000);
 }
 
 function activeSession() {

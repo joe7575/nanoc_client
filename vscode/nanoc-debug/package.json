@@ -2,7 +2,7 @@
   "name": "nanoc-debug",
   "displayName": "NanoC Debugger",
   "description": "Debug NanoC controllers (in Luanti/Minetest) via the nanoc-dap adapter.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "joe7575",
   "license": "AGPL-3.0-or-later",
   "engines": {
@@ -16,7 +16,8 @@
     "onDebugResolve:nanoc",
     "onLanguage:nanoc",
     "onCommand:nanoc.upload",
-    "onCommand:nanoc.download"
+    "onCommand:nanoc.download",
+    "onCommand:nanoc.check"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -29,6 +30,11 @@
       {
         "command": "nanoc.download",
         "title": "Download Program from Controller",
+        "category": "NanoC"
+      },
+      {
+        "command": "nanoc.check",
+        "title": "Check Program (lint)",
         "category": "NanoC"
       }
     ],
@@ -46,6 +52,11 @@
           "type": "string",
           "default": "",
           "description": "Path to the nanoc-dap executable. Leave empty to auto-detect."
+        },
+        "nanoc.checkPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the nanoc-check linter executable. Leave empty to auto-detect."
         }
       }
     },
