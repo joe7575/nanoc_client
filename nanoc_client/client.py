@@ -45,6 +45,9 @@ class NanocClient:
         raw.settimeout(self.timeout)
         self._sock = raw
         self._handshake()
+        # After the handshake, block indefinitely: the reader thread waits for
+        # asynchronous terminal/debug frames and must not hit a read timeout.
+        raw.settimeout(None)
 
     def close(self) -> None:
         if self._sock is not None:
