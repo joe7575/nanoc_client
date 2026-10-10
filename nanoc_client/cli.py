@@ -89,6 +89,22 @@ class Cli:
                 return "ENDED"
             if cmd == p.Event.DETACHED:
                 return "DETACHED"
+            if cmd == p.Command.VAR_INFO:
+                if not data or data[0] != 0:
+                    return "var: (end)"
+                kind = data[1] if len(data) > 1 else 0
+                nlen = data[2] if len(data) > 2 else 0
+                name = "".join(chr(x & 0xFF) for x in data[3:3 + nlen])
+                kname = p.VarKind(kind).name if kind in p.VarKind._value2member_map_ else str(kind)
+                return f"var {name} ({kname})"
+            if cmd == p.Command.BACKTRACE:
+                if not data or data[0] != 0:
+                    return "backtrace: (none)"
+                count = data[1] if len(data) > 1 else 0
+                frames = data[2:2 + 2 * count]
+                parts = [f"line {frames[i]} pc {frames[i + 1]}"
+                         for i in range(0, len(frames) - 1, 2)]
+                return "backtrace: " + " | ".join(parts)
             name = p.Command(cmd).name
         except ValueError:
             name = f"0x{cmd:02x}"
