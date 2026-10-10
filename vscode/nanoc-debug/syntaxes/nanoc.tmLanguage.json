@@ -1,0 +1,60 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "NanoC",
+  "scopeName": "source.nanoc",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#functions" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.double-slash.nanoc", "match": "//.*$" },
+        { "name": "comment.block.nanoc", "begin": "/\\*", "end": "\\*/" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        { "name": "string.quoted.double.nanoc", "begin": "\"", "end": "\"",
+          "patterns": [ { "name": "constant.character.escape.nanoc", "match": "\\\\." } ] }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.hex.nanoc", "match": "\\b0[xX][0-9a-fA-F]+\\b" },
+        { "name": "constant.numeric.nanoc", "match": "\\b[0-9]+\\b" }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        { "name": "keyword.control.nanoc",
+          "match": "\\b(while|if|else|for|to|next|return|reti|break|goto|gosub|dispatch|end)\\b" },
+        { "name": "keyword.other.nanoc",
+          "match": "\\b(func|const|local|dim|step|then|loop|endif|read|restore|ref|on)\\b" }
+      ]
+    },
+    "types": {
+      "patterns": [
+        { "name": "storage.type.nanoc",
+          "match": "\\b(int32|uint32|str8|u8|u16|u32|void|array)\\b" }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        { "name": "support.function.builtin.nanoc",
+          "match": "\\b(printf|sleep|millis|key|ta_send|ta_send_s|ta_signal|ta_recv|ta_port|ta_topic|ta_payload|ta_recv_sig|ta_sig_port|ta_sig_val)\\b" }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        { "name": "keyword.operator.nanoc",
+          "match": "==|!=|<=|>=|<<|>>|&&|\\|\\||[+\\-*/%=<>!&|^~]" }
+      ]
+    }
+  }
+}

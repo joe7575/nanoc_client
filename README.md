@@ -40,35 +40,36 @@ Unit tests:
 python -m unittest discover -s tests
 ```
 
-## Debugging from an editor (DAP)
+## Debugging from VS Code
 
-`nanoc-dap` is a Debug Adapter Protocol server: it reads DAP over stdio and
-talks to the NanoC bridge over TCP. Use it from any DAP-capable editor for
-full syntax highlighting and the editor's own debugger UI.
+This repo ships a minimal debugger extension (`vscode/nanoc-debug`) that
+starts the `nanoc-dap` adapter and adds syntax highlighting for `.nanoc`/`.nc`.
 
-Example (nvim-dap):
+Install (no `vsce` needed):
 
-```lua
-require('dap').adapters.nanoc = {
-  type = 'executable',
-  command = 'nanoc-dap',
-  args = {},
-}
-require('dap').configurations.nanoc = {
-  {
-    type = 'nanoc',
-    request = 'attach',
-    name = 'NanoC',
-    host = '127.0.0.1',
-    port = 41100,
-    token = '<TOKEN from the controller>',
-  }
+```bash
+mkdir -p ~/.vscode/extensions
+ln -sfn ~/Projekte/nanoc_client/vscode/nanoc-debug ~/.vscode/extensions/nanoc-debug
+```
+
+Reload VS Code (**Developer: Reload Window**), open the matching source file
+locally, and add a `launch.json` configuration:
+
+```json
+{
+  "type": "nanoc",
+  "request": "attach",
+  "name": "NanoC",
+  "host": "127.0.0.1",
+  "port": 41100,
+  "token": "<TOKEN from the controller>",
+  "source": "${workspaceFolder}/myprogram.nanoc"
 }
 ```
 
-VS Code needs a small debugger extension that spawns `nanoc-dap`; the adapter
-itself is editor-agnostic. Open the same source file locally so line numbers
-match the compiled program.
+Start with F5: breakpoints, stepping, call stack, Globals/Locals and `printf`
+output (Debug Console) all work. Other DAP clients (nvim-dap, Emacs dap-mode)
+can use the `nanoc-dap` executable directly.
 
 ## Status
 

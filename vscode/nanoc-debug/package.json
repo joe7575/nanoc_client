@@ -1,0 +1,99 @@
+{
+  "name": "nanoc-debug",
+  "displayName": "NanoC Debugger",
+  "description": "Debug NanoC controllers (in Luanti/Minetest) via the nanoc-dap adapter.",
+  "version": "0.1.0",
+  "publisher": "joe7575",
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Debuggers",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onDebugResolve:nanoc",
+    "onLanguage:nanoc"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "NanoC",
+      "properties": {
+        "nanoc.dapPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the nanoc-dap executable. Leave empty to auto-detect."
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "nanoc",
+        "aliases": ["NanoC", "nanoc"],
+        "extensions": [".nanoc", ".nc"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nanoc",
+        "scopeName": "source.nanoc",
+        "path": "./syntaxes/nanoc.tmLanguage.json"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "nanoc",
+        "label": "NanoC",
+        "languages": ["nanoc"],
+        "configurationAttributes": {
+          "attach": {
+            "required": [],
+            "properties": {
+              "host": { "type": "string", "default": "127.0.0.1", "description": "NanoC bridge host" },
+              "port": { "type": "number", "default": 41100, "description": "NanoC bridge port" },
+              "token": { "type": "string", "default": "", "description": "Controller external token" },
+              "source": { "type": "string", "description": "Path to the matching .nanoc source file" }
+            }
+          },
+          "launch": {
+            "required": [],
+            "properties": {
+              "host": { "type": "string", "default": "127.0.0.1" },
+              "port": { "type": "number", "default": 41100 },
+              "token": { "type": "string", "default": "" },
+              "source": { "type": "string" }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "nanoc",
+            "request": "attach",
+            "name": "NanoC: attach",
+            "host": "127.0.0.1",
+            "port": 41100,
+            "token": ""
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "NanoC: attach",
+            "description": "Attach to a NanoC controller",
+            "body": {
+              "type": "nanoc",
+              "request": "attach",
+              "name": "NanoC: attach",
+              "host": "127.0.0.1",
+              "port": 41100,
+              "token": "${1:token}",
+              "source": "${2:${file}}"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
