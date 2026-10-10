@@ -38,7 +38,7 @@ BUILTINS = {
     "ta_send", "ta_send_s", "ta_signal",
     "ta_recv", "ta_port", "ta_topic", "ta_payload",
     "ta_recv_sig", "ta_sig_port", "ta_sig_val",
-    "rnd", "abs", "len", "val", "instr",
+    "rnd", "abs", "len", "val", "instr", "string$", "free",
     "left$", "right$", "mid$", "str$", "hex$",
     "u8", "u16", "u32", "copy",
 }
