@@ -158,8 +158,10 @@ class MockServer:
             scope = data[0] if data else 0
             index = data[1] if len(data) > 1 else 0
             if scope == 0 and index < len(self.variables):
-                name, kind, _ = self.variables[index]
-                resp = [int(cmd), int(p.Status.OK), int(kind), len(name)] + _ascii_to_words(name)
+                name, kind, value = self.variables[index]
+                val = str(value)
+                resp = ([int(cmd), int(p.Status.OK), int(kind), len(name)]
+                        + _ascii_to_words(name) + [len(val)] + _ascii_to_words(val))
             else:
                 resp = [int(cmd), int(p.Status.END)]
         elif cmd == p.Command.VAR_WRITE:

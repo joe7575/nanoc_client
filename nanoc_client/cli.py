@@ -16,6 +16,11 @@ import threading
 from . import protocol as p
 from .client import NanocClient, NanocError
 
+
+def _chars(words):
+    return "".join(chr(w & 0xFF) for w in words)
+
+
 HELP = """\
 commands:
   state                     query the VM state
@@ -94,9 +99,12 @@ class Cli:
                     return "var: (end)"
                 kind = data[1] if len(data) > 1 else 0
                 nlen = data[2] if len(data) > 2 else 0
-                name = "".join(chr(x & 0xFF) for x in data[3:3 + nlen])
+                name = _chars(data[3:3 + nlen])
+                off = 3 + nlen
+                vlen = data[off] if len(data) > off else 0
+                val = _chars(data[off + 1:off + 1 + vlen])
                 kname = p.VarKind(kind).name if kind in p.VarKind._value2member_map_ else str(kind)
-                return f"var {name} ({kname})"
+                return f"var {name} = {val} ({kname})"
             if cmd == p.Command.BACKTRACE:
                 if not data or data[0] != 0:
                     return "backtrace: (none)"

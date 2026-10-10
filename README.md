@@ -40,15 +40,46 @@ Unit tests:
 python -m unittest discover -s tests
 ```
 
+## Debugging from an editor (DAP)
+
+`nanoc-dap` is a Debug Adapter Protocol server: it reads DAP over stdio and
+talks to the NanoC bridge over TCP. Use it from any DAP-capable editor for
+full syntax highlighting and the editor's own debugger UI.
+
+Example (nvim-dap):
+
+```lua
+require('dap').adapters.nanoc = {
+  type = 'executable',
+  command = 'nanoc-dap',
+  args = {},
+}
+require('dap').configurations.nanoc = {
+  {
+    type = 'nanoc',
+    request = 'attach',
+    name = 'NanoC',
+    host = '127.0.0.1',
+    port = 41100,
+    token = '<TOKEN from the controller>',
+  }
+}
+```
+
+VS Code needs a small debugger extension that spawns `nanoc-dap`; the adapter
+itself is editor-agnostic. Open the same source file locally so line numbers
+match the compiled program.
+
 ## Status
 
 - `protocol.py` – framing, handshake, debug command vocabulary (protocol v1)
 - `client.py` – blocking TCP/TLS client
 - `cli.py` – interactive CLI with a reader thread
 - `mock_server.py` – mock server for client testing
+- `dap.py` – Debug Adapter Protocol server (`nanoc-dap`) for editors
 
-A curses TUI (terminal + debugger panes) can be built on the same core later.
-The Luanti-side TCP bridge is the next step.
+A curses TUI can still be built on the same core later.
+The Luanti-side bridge is `nanoc_mod/src/bridge.lua`.
 
 ## License
 

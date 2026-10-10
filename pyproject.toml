@@ -17,6 +17,7 @@ classifiers = [
 
 [project.scripts]
 nanoc-client = "nanoc_client.cli:main"
+nanoc-dap = "nanoc_client.dap:main"
 
 [tool.setuptools.packages.find]
 include = ["nanoc_client*"]
