@@ -196,6 +196,15 @@ class MockServer:
                 "edges": [{"from": "0102", "to": "0110", "dir": 2, "via": "tube"}],
             }).encode("utf-8")
             resp = [int(cmd), int(p.Status.OK), len(text)] + list(text)
+        elif cmd == p.Command.CATALOG:
+            text = json.dumps({
+                "topics": {
+                    "131": {"kind": "request", "name": "chest state"},
+                    "65": {"kind": "send", "name": "config item / limit"},
+                },
+                "rules": [["chest", [131, 192]], ["pusher", [1, 20, 65, 150]]],
+            }).encode("utf-8")
+            resp = [int(cmd), int(p.Status.OK), len(text)] + list(text)
         else:
             resp = [int(cmd), int(p.Status.UNKNOWN_CMD)]
 

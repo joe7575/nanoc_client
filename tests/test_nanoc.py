@@ -67,6 +67,12 @@ class TestNanocCli(unittest.TestCase):
         self.assertIn("techage:ta4_chest", out)
         self.assertIn("edges", out)
 
+    def test_catalog(self):
+        code, out, err = run_main(
+            ["catalog", "--port", str(self.port), "--token", "tok"])
+        self.assertEqual(code, 0, err)
+        self.assertIn("chest state", out)
+
     def test_run_denied_when_busy(self):
         self.srv.stop()
         port = free_port()

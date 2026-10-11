@@ -65,7 +65,15 @@ class TestMcpServer(unittest.TestCase):
         r = self._call(2, "tools/list")
         names = [t["name"] for t in r["result"]["tools"]]
         self.assertIn("nanoc_scan", names)
+        self.assertIn("nanoc_catalog", names)
         self.assertIn("nanoc_exec", names)
+
+    def test_catalog_tool(self):
+        self._call(1, "initialize", {"protocolVersion": "2024-11-05"})
+        r = self._call(2, "tools/call",
+                       {"name": "nanoc_catalog", "arguments": {}})
+        self.assertFalse(r["result"]["isError"])
+        self.assertIn("chest state", r["result"]["content"][0]["text"])
 
     def test_scan_tool(self):
         self._call(1, "initialize", {"protocolVersion": "2024-11-05"})

@@ -33,9 +33,16 @@ TOOLS = [
     {
         "name": "nanoc_scan",
         "description": "Dump the TA4 techage network around the controller as "
-                       "JSON (nodes with number/state/inventory and edges).",
+                       "JSON (nodes with number/state/inventory/caps and edges).",
         "inputSchema": {"type": "object", "properties": {
             "radius": _INT, **_CONN}},
+    },
+    {
+        "name": "nanoc_catalog",
+        "description": "Dump the Beduino/techage topic catalog as JSON "
+                       "(topic -> kind/name/payload/response) plus the node "
+                       "name-pattern rules.",
+        "inputSchema": {"type": "object", "properties": {**_CONN}},
     },
     {
         "name": "nanoc_check",
@@ -193,6 +200,18 @@ class McpServer:
             text = _compiler_message(resp)
             if status != 0 or not text:
                 raise McpError(-32603, "scan failed")
+            return text
+        finally:
+            client.close()
+
+    def _tool_nanoc_catalog(self, args):
+        client = _connect(self._conn(args))
+        try:
+            resp = _cmd(client, p.Command.CATALOG, timeout=15)
+            status = resp[0] if resp else 1
+            text = _compiler_message(resp)
+            if status != 0 or not text:
+                raise McpError(-32603, "catalog failed")
             return text
         finally:
             client.close()

@@ -205,6 +205,24 @@ def cmd_scan(args):
         client.close()
 
 
+def cmd_catalog(args):
+    client = _connect(args)
+    try:
+        resp = _cmd(client, p.Command.CATALOG, timeout=15)
+        status = resp[0] if resp else 1
+        text = _compiler_message(resp)
+        if status != 0 or not text:
+            print("error: catalog failed", file=sys.stderr)
+            return 1
+        try:
+            print(json.dumps(json.loads(text), indent=2))
+        except ValueError:
+            print(text)
+        return 0
+    finally:
+        client.close()
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="nanoc", description="Scriptable NanoC client")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -241,6 +259,10 @@ def main(argv=None):
     _add_conn(psc)
     psc.add_argument("--radius", type=int, default=8)
     psc.set_defaults(func=cmd_scan)
+
+    pcat = sub.add_parser("catalog", help="dump the Beduino topic catalog as JSON")
+    _add_conn(pcat)
+    pcat.set_defaults(func=cmd_catalog)
 
     args = ap.parse_args(argv)
     try:
