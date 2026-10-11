@@ -15,6 +15,7 @@ Connection: --host/--port/--token (+ --tls). Token from the controller form.
 from __future__ import annotations
 
 import argparse
+import json
 import socket
 import sys
 import time
@@ -180,6 +181,24 @@ def cmd_exec(args):
         client.close()
 
 
+def cmd_scan(args):
+    client = _connect(args)
+    try:
+        resp = _cmd(client, p.Command.SCAN, args.radius, timeout=20)
+        status = resp[0] if resp else 1
+        text = _compiler_message(resp)
+        if status != 0 or not text:
+            print("error: scan failed", file=sys.stderr)
+            return 1
+        try:
+            print(json.dumps(json.loads(text), indent=2))
+        except ValueError:
+            print(text)
+        return 0
+    finally:
+        client.close()
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="nanoc", description="Scriptable NanoC client")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -211,6 +230,11 @@ def main(argv=None):
     _add_conn(pe)
     pe.add_argument("--seconds", type=float, default=3.0)
     pe.set_defaults(func=cmd_exec)
+
+    psc = sub.add_parser("scan", help="dump the TA4 techage topology as JSON")
+    _add_conn(psc)
+    psc.add_argument("--radius", type=int, default=8)
+    psc.set_defaults(func=cmd_scan)
 
     args = ap.parse_args(argv)
     try:

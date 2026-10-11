@@ -89,6 +89,7 @@ nanoc run   --token T                    # resume the controller
 nanoc stop  --token T                    # halt (pause)
 nanoc read  --token T --seconds 3        # print terminal output for 3 s
 nanoc exec  app.nanoc --token T --seconds 3   # push + run + read (one call)
+nanoc scan  --token T --radius 8              # TA4 techage topology as JSON
 ```
 
 Connection flags: `--host` (127.0.0.1), `--port` (41100), `--token` (from the

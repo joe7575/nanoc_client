@@ -45,6 +45,7 @@ class Command(IntEnum):
     BACKTRACE = 0x0F
     PROG_GET = 0x20
     PROG_SET = 0x21
+    SCAN = 0x22
 
 
 class Event(IntEnum):

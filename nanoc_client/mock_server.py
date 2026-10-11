@@ -10,6 +10,7 @@ Run:  python -m nanoc_client.mock_server --port 40000 --token secret
 from __future__ import annotations
 
 import argparse
+import json
 import socket
 import threading
 import time
@@ -184,6 +185,17 @@ class MockServer:
                 resp = [int(cmd), int(p.Status.PARAM), len(msg)] + [ord(c) for c in msg]
             else:
                 resp = [int(cmd), int(p.Status.OK), 0]
+        elif cmd == p.Command.SCAN:
+            text = json.dumps({
+                "center": [0, 0, 0], "radius": 8,
+                "nodes": [
+                    {"number": "0102", "name": "techage:ta4_chest", "state": "loaded",
+                     "inv": {"main": [{"item": "default:stone", "count": 40}]}},
+                    {"number": "0110", "name": "techage:ta4_autocrafter", "state": "blocked"},
+                ],
+                "edges": [{"from": "0102", "to": "0110", "dir": 2, "via": "tube"}],
+            }).encode("utf-8")
+            resp = [int(cmd), int(p.Status.OK), len(text)] + list(text)
         else:
             resp = [int(cmd), int(p.Status.UNKNOWN_CMD)]
 

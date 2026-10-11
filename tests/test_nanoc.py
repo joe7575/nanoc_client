@@ -60,6 +60,13 @@ class TestNanocCli(unittest.TestCase):
         self.assertEqual(code, 0, err)
         self.assertIn("tick", out)
 
+    def test_scan(self):
+        code, out, err = run_main(
+            ["scan", "--port", str(self.port), "--token", "tok"])
+        self.assertEqual(code, 0, err)
+        self.assertIn("techage:ta4_chest", out)
+        self.assertIn("edges", out)
+
     def test_run_denied_when_busy(self):
         self.srv.stop()
         port = free_port()
