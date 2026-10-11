@@ -236,6 +236,9 @@ class DapServer:
     def _do_configurationDone(self, req, args):
         # optional: upload the active file before attaching (F5 runs it)
         if self._upload_on_start and self._source_path:
+            self.send_event("output", {
+                "category": "stdout",
+                "output": f"NanoC: uploading {self._source_path}\n"})
             try:
                 with open(self._source_path, "rb") as f:
                     data = f.read()

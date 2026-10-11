@@ -61,6 +61,16 @@ class NanocConfigProvider {
       config.port = 41100;
       config.token = '';
     }
+    // Resolve ${file} / ${workspaceFolder} ourselves (attach configs do not
+    // always get these substituted by VS Code).
+    const editor = vscode.window.activeTextEditor;
+    const active = editor ? editor.document.fileName : '';
+    const root = folder ? folder.uri.fsPath : '';
+    const expand = (v) => (v || '')
+      .replace(/\$\{file\}/g, active)
+      .replace(/\$\{workspaceFolder\}/g, root);
+    if (config.program) config.program = expand(config.program);
+    if (config.source) config.source = expand(config.source);
     return config;
   }
 }
