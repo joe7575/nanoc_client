@@ -2,7 +2,7 @@
   "name": "nanoc-debug",
   "displayName": "NanoC Debugger",
   "description": "Debug NanoC controllers (in Luanti/Minetest) via the nanoc-dap adapter.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "joe7575",
   "license": "AGPL-3.0-or-later",
   "engines": {
@@ -21,6 +21,9 @@
   ],
   "main": "./extension.js",
   "contributes": {
+    "configurationDefaults": {
+      "debug.allowBreakpointsEverywhere": true
+    },
     "commands": [
       {
         "command": "nanoc.upload",

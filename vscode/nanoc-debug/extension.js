@@ -86,7 +86,14 @@ function activate(context) {
   diagnostics = vscode.languages.createDiagnosticCollection('nanoc');
   context.subscriptions.push(diagnostics);
   context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(runCheck));
-  vscode.workspace.textDocuments.forEach(runCheck);
+  context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(fixLanguage));
+  vscode.workspace.textDocuments.forEach(fixLanguage);
+}
+
+function fixLanguage(document) {
+  if (document && /\.(nanoc|nc)$/i.test(document.fileName) && document.languageId !== 'nanoc') {
+    vscode.languages.setTextDocumentLanguage(document, 'nanoc');
+  }
 }
 
 function resolveChecker() {
