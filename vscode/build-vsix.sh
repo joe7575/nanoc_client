@@ -16,7 +16,7 @@ cat > "$work/extension.vsixmanifest" <<'XML'
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Language="en-US" Id="nanoc-debug" Version="0.3.5" Publisher="joe7575" />
+    <Identity Language="en-US" Id="nanoc-debug" Version="0.3.6" Publisher="joe7575" />
     <DisplayName>NanoC Debugger</DisplayName>
     <Description xml:space="preserve">Debug NanoC controllers via nanoc-dap</Description>
     <Tags>debugger,nanoc,minetest,luanti</Tags>

@@ -95,6 +95,10 @@ class NanocConfigProvider {
 function activate(context) {
   outputChannel = vscode.window.createOutputChannel('NanoC');
   context.subscriptions.push(outputChannel);
+  try {
+    const ext = vscode.extensions.getExtension('joe7575.nanoc-debug');
+    log('NanoC debug extension ' + (ext && ext.packageJSON.version || '?') + ' started');
+  } catch (e) { /* ignore */ }
   context.subscriptions.push(
     vscode.debug.registerDebugAdapterDescriptorFactory('nanoc', new NanocAdapterFactory())
   );
