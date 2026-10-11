@@ -2,7 +2,7 @@
   "name": "nanoc-debug",
   "displayName": "NanoC Debugger",
   "description": "Debug NanoC controllers (in Luanti/Minetest) via the nanoc-dap adapter.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publisher": "joe7575",
   "license": "AGPL-3.0-or-later",
   "engines": {
@@ -90,7 +90,9 @@
               "host": { "type": "string", "default": "127.0.0.1", "description": "NanoC bridge host" },
               "port": { "type": "number", "default": 41100, "description": "NanoC bridge port" },
               "token": { "type": "string", "default": "", "description": "Controller external token" },
-              "source": { "type": "string", "description": "Path to the matching .nanoc source file" }
+              "source": { "type": "string", "description": "Path to the matching .nanoc source file (used for stack traces)" },
+              "program": { "type": "string", "description": "Path to the .nanoc file to upload on start (use ${file})" },
+              "upload": { "type": "boolean", "default": false, "description": "Upload 'program' before starting" }
             }
           },
           "launch": {
@@ -99,7 +101,9 @@
               "host": { "type": "string", "default": "127.0.0.1" },
               "port": { "type": "number", "default": 41100 },
               "token": { "type": "string", "default": "" },
-              "source": { "type": "string" }
+              "source": { "type": "string" },
+              "program": { "type": "string" },
+              "upload": { "type": "boolean", "default": false }
             }
           }
         },
@@ -107,16 +111,19 @@
           {
             "type": "nanoc",
             "request": "attach",
-            "name": "NanoC: attach",
+            "name": "NanoC: attach + run active file",
             "host": "127.0.0.1",
             "port": 41100,
-            "token": ""
+            "token": "",
+            "source": "${file}",
+            "program": "${file}",
+            "upload": true
           }
         ],
         "configurationSnippets": [
           {
-            "label": "NanoC: attach",
-            "description": "Attach to a NanoC controller",
+            "label": "NanoC: attach + run active file",
+            "description": "Attach to a NanoC controller and upload the active .nanoc file",
             "body": {
               "type": "nanoc",
               "request": "attach",
@@ -124,7 +131,9 @@
               "host": "127.0.0.1",
               "port": 41100,
               "token": "${1:token}",
-              "source": "${2:${file}}"
+              "source": "${2:${file}}",
+              "program": "${2:${file}}",
+              "upload": true
             }
           }
         ]

@@ -63,7 +63,9 @@ Open the matching source file locally and add a `launch.json` configuration:
   "host": "127.0.0.1",
   "port": 41100,
   "token": "<TOKEN from the controller>",
-  "source": "${workspaceFolder}/myprogram.nanoc"
+  "source": "${file}",
+  "program": "${file}",
+  "upload": true
 }
 ```
 

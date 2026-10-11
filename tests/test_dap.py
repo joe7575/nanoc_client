@@ -3,6 +3,7 @@ import os
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import unittest
@@ -98,6 +99,22 @@ class TestDapAdapter(unittest.TestCase):
         r = self._request(13, "nanoc/upload", {"text": "SYNTAX_ERROR\n"})
         self.assertFalse(r["success"])
         self.assertTrue(self._request(14, "disconnect")["success"])
+
+
+    def test_upload_on_start(self):
+        fd, path = tempfile.mkstemp(suffix=".nanoc", text=True)
+        with os.fdopen(fd, "w") as f:
+            f.write("int32 x = 7\n")
+        try:
+            self._request(1, "initialize")
+            self._request(2, "attach", {
+                "host": "127.0.0.1", "port": self.port, "token": "tok",
+                "program": path, "source": path, "upload": True})
+            self._request(3, "configurationDone")
+            time.sleep(0.2)
+            self.assertIn("int32 x = 7", self.srv.program)
+        finally:
+            os.unlink(path)
 
 
 if __name__ == "__main__":

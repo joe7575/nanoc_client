@@ -34,6 +34,7 @@ class DapServer:
         self._breakpoints = []
         self._last_line = 1
         self._attached_state = None
+        self._upload_on_start = False
         self._running = True
         self._reader = None
 
@@ -140,7 +141,8 @@ class DapServer:
             tls=bool(args.get("tls", False)),
         )
         self.client.connect()
-        self._source_path = args.get("source")
+        self._source_path = args.get("source") or args.get("program")
+        self._upload_on_start = bool(args.get("upload", False))
         self._reader = threading.Thread(target=self._reader_loop, daemon=True)
         self._reader.start()
 
@@ -232,6 +234,25 @@ class DapServer:
     _do_launch = _do_attach
 
     def _do_configurationDone(self, req, args):
+        # optional: upload the active file before attaching (F5 runs it)
+        if self._upload_on_start and self._source_path:
+            try:
+                with open(self._source_path, "rb") as f:
+                    data = f.read()
+                cmd2, resp = self._remote_request(
+                    p.Command.PROG_SET, len(data), *list(data), timeout=15)
+                msg = _compiler_message(resp)
+                if msg:
+                    self.send_event("output", {"category": "stdout", "output": msg})
+                # re-apply breakpoints (compiling rebuilt the line table)
+                self._remote_request(p.Command.BP_CLR_ALL)
+                for line in self._breakpoints:
+                    self._remote_request(p.Command.BP_SET, line)
+            except OSError as err:
+                self.send_event("output", {
+                    "category": "stderr",
+                    "output": f"upload failed: {err}\n"})
+
         cmd, data = self._remote_request(p.Command.ATTACH, 1, 0)
         self.send_response(req)
         # notify the editor that the target is now stopped (attach pauses it)
@@ -361,6 +382,13 @@ class DapServer:
 
 def _chars(words):
     return "".join(chr(w & 0xFF) for w in words)
+
+
+def _compiler_message(resp):
+    if not resp or len(resp) < 2:
+        return ""
+    n = resp[1]
+    return bytes(b & 0xFF for b in resp[2:2 + n]).decode("utf-8", "replace")
 
 
 def main():

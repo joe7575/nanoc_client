@@ -38,11 +38,18 @@ Open the same `.nanoc` source file locally that is compiled on the controller
       "host": "127.0.0.1",
       "port": 41100,
       "token": "<TOKEN from the controller>",
-      "source": "${workspaceFolder}/myprogram.nanoc"
+      "source": "${file}",
+      "program": "${file}",
+      "upload": true
     }
   ]
 }
 ```
+
+`${file}` is the active editor, so F5 always uses (and, with `"upload": true`,
+uploads + compiles) the file you are looking at. Without `upload`, F5 only
+attaches and the controller keeps whatever program it had. Breakpoints are
+re-applied automatically after the upload.
 
 Start it with F5. Breakpoints, stepping, the call stack and the Globals/Locals
 variables view are available; `printf` output appears in the Debug Console.
