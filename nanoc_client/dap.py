@@ -289,8 +289,16 @@ class DapServer:
 
     def _do_setBreakpoints(self, req, args):
         src = args.get("source") or {}
-        if src.get("path"):
-            self._source_path = src["path"]
+        path = src.get("path")
+        # Breakpoints for a different file: ignore (single-file program). Also
+        # never let this override the program/source path from attach.
+        if path and self._source_path and os.path.realpath(path) != os.path.realpath(self._source_path):
+            self.send_response(req, body={"breakpoints": [
+                {"verified": False, "line": int(b.get("line", 0))}
+                for b in args.get("breakpoints", [])]})
+            return
+        if path and not self._source_path:
+            self._source_path = path
         self._remote_request(p.Command.BP_CLR_ALL)
         result = []
         self._breakpoints = []
