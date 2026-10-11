@@ -36,6 +36,9 @@ class NanocAdapterFactory {
     const command = resolveCommand(session.configuration);
     const editor = vscode.window.activeTextEditor;
     const env = Object.assign({}, process.env);
+    if (session.workspaceFolder) {
+      env.NANOC_WORKSPACE = session.workspaceFolder.uri.fsPath;
+    }
     if (editor && editor.document.fileName && fs.existsSync(editor.document.fileName)) {
       env.NANOC_ACTIVE = editor.document.fileName;
       log('adapter: NANOC_ACTIVE=' + editor.document.fileName);

@@ -144,8 +144,21 @@ class DapServer:
         self.client.connect()
         program = args.get("source") or args.get("program")
         env_active = os.environ.get("NANOC_ACTIVE")
+        self.send_event("output", {
+            "category": "stdout",
+            "output": (f"NanoC adapter: source={args.get('source')!r} "
+                       f"program={args.get('program')!r} "
+                       f"NANOC_ACTIVE={env_active!r} exists={bool(program and os.path.exists(program))}\n"),
+        })
         if (not program or not os.path.exists(program)) and env_active and os.path.exists(env_active):
             program = env_active
+        if not program or not os.path.exists(program):
+            ws = os.environ.get("NANOC_WORKSPACE")
+            if ws and os.path.isdir(ws):
+                cands = [os.path.join(ws, f) for f in sorted(os.listdir(ws))
+                         if f.lower().endswith((".nanoc", ".nc"))]
+                if len(cands) == 1:
+                    program = cands[0]
         self._source_path = program
         self._upload_on_start = bool(args.get("upload", False))
         self._reader = threading.Thread(target=self._reader_loop, daemon=True)
