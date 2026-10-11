@@ -96,15 +96,16 @@ def _read_seconds(client, seconds, collect):
             collect.append(payload)
 
 
+def _upload_bytes(client, data, timeout=10.0):
+    resp = _cmd(client, p.Command.PROG_SET, len(data), *list(data), timeout=timeout)
+    status = resp[0] if resp else 1
+    return status == 0, _compiler_message(resp)
+
+
 def _upload(client, path, timeout=10.0):
     with open(path, "rb") as f:
         data = f.read()
-    resp = _cmd(client, p.Command.PROG_SET, len(data), *list(data), timeout=timeout)
-    status = resp[0] if resp else 1
-    msg = _compiler_message(resp)
-    if msg:
-        sys.stderr.write(msg if msg.endswith("\n") else msg + "\n")
-    return status == 0
+    return _upload_bytes(client, data, timeout)
 
 
 # -- subcommands -----------------------------------------------------------
@@ -121,7 +122,10 @@ def cmd_push(args):
     try:
         if not _claim(client):
             return 2
-        if not _upload(client, args.file):
+        ok, msg = _upload(client, args.file)
+        if msg:
+            sys.stderr.write(msg if msg.endswith("\n") else msg + "\n")
+        if not ok:
             return 1
         _cmd(client, p.Command.CONTINUE)      # resume the VM
         print(f"uploaded {args.file}")
@@ -171,7 +175,9 @@ def cmd_exec(args):
     try:
         if not _claim(client):
             return 2
-        if not _upload(client, args.file):
+        ok, msg = _upload(client, args.file)
+        if not ok:
+            sys.stderr.write(msg if msg.endswith("\n") else msg + "\n")
             return 1
         _cmd(client, p.Command.CONTINUE)
         _read_seconds(client, args.seconds, collect)

@@ -96,6 +96,47 @@ Connection flags: `--host` (127.0.0.1), `--port` (41100), `--token` (from the
 controller form), `--tls`. `nanoc exec` is the one-shot loop for automation:
 write → exec → read output → improve.
 
+## MCP server (`nanoc-mcp`)
+
+Exposes the bridge to AI clients (Claude Desktop, OpenCode, …) as MCP tools:
+
+`nanoc_scan`, `nanoc_check`, `nanoc_push`, `nanoc_program_get`, `nanoc_run`,
+`nanoc_stop`, `nanoc_read`, `nanoc_exec`.
+
+Connection defaults come from the environment (`NANOC_HOST`, `NANOC_PORT`,
+`NANOC_TOKEN`, `NANOC_TLS`) or per tool call.
+
+Claude Desktop (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "nanoc": {
+      "command": "nanoc-mcp",
+      "env": { "NANOC_PORT": "41100", "NANOC_TOKEN": "<TOKEN>" }
+    }
+  }
+}
+```
+
+OpenCode (`opencode.json`, adjust to your version):
+
+```json
+{
+  "mcp": {
+    "nanoc": {
+      "type": "local",
+      "command": ["nanoc-mcp"],
+      "environment": { "NANOC_PORT": "41100", "NANOC_TOKEN": "<TOKEN>" },
+      "enabled": true
+    }
+  }
+}
+```
+
+Typical AI loop: `nanoc_scan` → reason about the graph → `nanoc_exec`
+(push+run+read) → refine.
+
 ## Focus
 
 Only one client may debug a controller at a time. The first `attach` owns it;
