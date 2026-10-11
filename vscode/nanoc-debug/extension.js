@@ -71,6 +71,12 @@ class NanocConfigProvider {
       .replace(/\$\{workspaceFolder\}/g, root);
     if (config.program) config.program = expand(config.program);
     if (config.source) config.source = expand(config.source);
+    if (config.upload && config.program && !fs.existsSync(config.program)) {
+      vscode.window.showErrorMessage(
+        'NanoC: file not found: ' + config.program +
+        ' — make the intended .nanoc file the active editor (or use a fixed path).');
+      return undefined;   // abort the debug session
+    }
     return config;
   }
 }
