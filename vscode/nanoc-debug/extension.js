@@ -34,7 +34,16 @@ function resolveCommand(configuration) {
 class NanocAdapterFactory {
   createDebugAdapterDescriptor(session) {
     const command = resolveCommand(session.configuration);
-    return new vscode.DebugAdapterExecutable(command, []);
+    const editor = vscode.window.activeTextEditor;
+    const env = Object.assign({}, process.env);
+    if (editor && editor.document.fileName && fs.existsSync(editor.document.fileName)) {
+      env.NANOC_ACTIVE = editor.document.fileName;
+      log('adapter: NANOC_ACTIVE=' + editor.document.fileName);
+    } else {
+      log('adapter: no active file (' +
+        (editor ? editor.document.fileName : 'none') + ')');
+    }
+    return new vscode.DebugAdapterExecutable(command, [], { env });
   }
 }
 
@@ -72,6 +81,8 @@ class NanocConfigProvider {
       .replace(/\$\{workspaceFolder\}/g, root);
     if (config.program) config.program = expand(config.program);
     if (config.source) config.source = expand(config.source);
+    log('resolve: active="' + active + '" program="' + config.program +
+      '" upload=' + config.upload);
 
     if (!config.upload || (config.program && fs.existsSync(config.program))) {
       return config;
@@ -89,6 +100,11 @@ class NanocConfigProvider {
           : 'NanoC: several .nanoc files — open the one to run, or set "program".');
         return undefined;
       });
+  }
+
+  // Called by VS Code after it has substituted ${...} variables.
+  resolveDebugConfigurationWithSubstitutedVariables(folder, config) {
+    return this.resolveDebugConfiguration(folder, config);
   }
 }
 

@@ -11,6 +11,7 @@ Run:  nanoc-dap        (the editor talks to it via stdio)
 from __future__ import annotations
 
 import json
+import os
 import sys
 import threading
 
@@ -141,7 +142,11 @@ class DapServer:
             tls=bool(args.get("tls", False)),
         )
         self.client.connect()
-        self._source_path = args.get("source") or args.get("program")
+        program = args.get("source") or args.get("program")
+        env_active = os.environ.get("NANOC_ACTIVE")
+        if (not program or not os.path.exists(program)) and env_active and os.path.exists(env_active):
+            program = env_active
+        self._source_path = program
         self._upload_on_start = bool(args.get("upload", False))
         self._reader = threading.Thread(target=self._reader_loop, daemon=True)
         self._reader.start()
