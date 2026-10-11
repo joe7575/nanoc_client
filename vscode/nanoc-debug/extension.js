@@ -64,20 +64,31 @@ class NanocConfigProvider {
     // Resolve ${file} / ${workspaceFolder} ourselves (attach configs do not
     // always get these substituted by VS Code).
     const editor = vscode.window.activeTextEditor;
-    const active = editor ? editor.document.fileName : '';
+    let active = editor ? editor.document.fileName : '';
+    if (active && !fs.existsSync(active)) active = '';   // stale/missing tab
     const root = folder ? folder.uri.fsPath : '';
     const expand = (v) => (v || '')
       .replace(/\$\{file\}/g, active)
       .replace(/\$\{workspaceFolder\}/g, root);
     if (config.program) config.program = expand(config.program);
     if (config.source) config.source = expand(config.source);
-    if (config.upload && config.program && !fs.existsSync(config.program)) {
-      vscode.window.showErrorMessage(
-        'NanoC: file not found: ' + config.program +
-        ' — make the intended .nanoc file the active editor (or use a fixed path).');
-      return undefined;   // abort the debug session
+
+    if (!config.upload || (config.program && fs.existsSync(config.program))) {
+      return config;
     }
-    return config;
+    // Active file missing/unknown: fall back to the single .nanoc/.nc file.
+    return vscode.workspace.findFiles('**/*.{nanoc,nc}', '**/{.git,node_modules}/**')
+      .then((list) => {
+        if (list.length === 1) {
+          config.program = list[0].fsPath;
+          config.source = list[0].fsPath;
+          return config;
+        }
+        vscode.window.showErrorMessage(list.length === 0
+          ? 'NanoC: no .nanoc file found in the workspace.'
+          : 'NanoC: several .nanoc files — open the one to run, or set "program".');
+        return undefined;
+      });
   }
 }
 
