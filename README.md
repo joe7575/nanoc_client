@@ -43,7 +43,8 @@ python -m unittest discover -s tests
 ## Debugging from VS Code
 
 This repo ships a minimal debugger extension (`vscode/nanoc-debug`) that
-starts the `nanoc-dap` adapter and adds syntax highlighting for `.nanoc`/`.nc`.
+starts the `nanoc-dap` adapter and adds syntax highlighting for `.nanoc`
+files (`.nc` is accepted as an alias).
 
 Install (build a VSIX, no `vsce` needed), then restart VS Code:
 
@@ -70,7 +71,8 @@ Start with F5: breakpoints, stepping, call stack, Globals/Locals and `printf`
 output (Debug Console) all work. While attached, **NanoC: Upload Program to
 Controller** (Ctrl+Alt+U) pushes the active editor to the controller
 (+recompile), and **NanoC: Download Program from Controller** opens the
-controller's program. `.nanoc`/`.nc` files are also linted on save (via the
+controller's program. `.nanoc` files (`.nc` alias) are also linted on save
+(via the
 local `nanoc-check`); problems appear in the Problems panel and jump to the
 line on click (command **NanoC: Check Program (lint)**). Other DAP clients
 (nvim-dap, Emacs dap-mode) can use the `nanoc-dap` executable directly.
