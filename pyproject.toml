@@ -21,6 +21,11 @@ nanoc-dap = "nanoc_client.dap:main"
 nanoc-check = "nanoc_client.checker:main"
 nanoc = "nanoc_client.nanoc:main"
 nanoc-mcp = "nanoc_client.mcp:main"
+nanoc-tui = "nanoc_client.tui:main"
+
+[project.optional-dependencies]
+# curses is in the stdlib on Linux/macOS/Android; Windows needs this package.
+windows = ["windows-curses>=2.3"]
 
 [tool.setuptools.packages.find]
 include = ["nanoc_client*"]

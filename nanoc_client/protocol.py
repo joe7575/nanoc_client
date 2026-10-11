@@ -25,6 +25,7 @@ class Channel(IntEnum):
     DEBUG = 1
     TERMINAL = 2
     CONTROL = 3
+    LOG = 4
 
 
 class Command(IntEnum):

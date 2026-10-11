@@ -12,11 +12,13 @@ work="$(mktemp -d)"
 mkdir -p "$work/extension"
 cp -r "$ext/." "$work/extension/"
 
-cat > "$work/extension.vsixmanifest" <<'XML'
+VERSION="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$ext/package.json" | head -1)"
+
+cat > "$work/extension.vsixmanifest" <<XML
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Language="en-US" Id="nanoc-debug" Version="0.3.9" Publisher="joe7575" />
+    <Identity Language="en-US" Id="nanoc-debug" Version="${VERSION}" Publisher="joe7575" />
     <DisplayName>NanoC Debugger</DisplayName>
     <Description xml:space="preserve">Debug NanoC controllers via nanoc-dap</Description>
     <Tags>debugger,nanoc,minetest,luanti</Tags>

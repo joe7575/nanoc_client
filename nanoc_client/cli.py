@@ -15,6 +15,7 @@ import threading
 
 from . import protocol as p
 from .client import NanocClient, NanocError
+from .screen import Screen
 
 
 def _chars(words):
@@ -63,6 +64,9 @@ class Cli:
         self.client = client
         self.show_terminal = show_terminal
         self._stop = threading.Event()
+        self.screen = Screen()
+        self._screen_last = self.screen.snapshot()
+        self._color = sys.stdout.isatty()
 
     # -- output -------------------------------------------------------------
     def _reader(self):
@@ -76,8 +80,17 @@ class Cli:
                 return
             if channel is p.Channel.TERMINAL:
                 if self.show_terminal:
-                    sys.stdout.write(payload.decode("utf-8", "replace"))
+                    self.screen.feed(payload)
+                    for _row, text in self.screen.changed_rows(self._screen_last, self._color):
+                        sys.stdout.write(text + "\n")
                     sys.stdout.flush()
+                    self._screen_last = self.screen.snapshot()
+                    if self.screen.take_bell():
+                        sys.stdout.write("\a")
+                        sys.stdout.flush()
+            elif channel is p.Channel.LOG:
+                sys.stdout.write("\n[log] " + payload.decode("utf-8", "replace").rstrip("\n") + "\n")
+                sys.stdout.flush()
             elif channel is p.Channel.DEBUG:
                 try:
                     cmd, data = p.decode_debug(payload)

@@ -238,7 +238,7 @@ class MockServer:
                 if self.variables:
                     name, kind, _ = self.variables[0]
                     self.variables[0] = (name, kind, self.counter)
-            text = f"tick {self.counter} (line {self.line}, pc {self.pc})\r\n"
+            text = f"tick {self.counter} (line {self.line}, pc {self.pc})\n"
             try:
                 self._send(p.Channel.TERMINAL, text.encode(), session=self._session)
             except OSError:

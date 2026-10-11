@@ -23,6 +23,7 @@ import time
 from . import protocol as p
 from .checker import check_file
 from .client import NanocClient, NanocError
+from .screen import Screen
 
 
 def _add_conn(ap):
@@ -163,10 +164,19 @@ def cmd_read(args):
     collect = []
     try:
         _read_seconds(client, args.seconds, collect)
-        sys.stdout.write(b"".join(collect).decode("utf-8", "replace"))
+        _print_screen(collect)
         return 0
     finally:
         client.close()
+
+
+def _print_screen(chunks):
+    """Render the collected terminal chunks through the termlib screen model."""
+    screen = Screen()
+    for chunk in chunks:
+        screen.feed(chunk)
+    color = sys.stdout.isatty()
+    sys.stdout.write(screen.render_ansi(color=color).rstrip("\n") + "\n")
 
 
 def cmd_exec(args):
@@ -181,7 +191,7 @@ def cmd_exec(args):
             return 1
         _cmd(client, p.Command.CONTINUE)
         _read_seconds(client, args.seconds, collect)
-        sys.stdout.write(b"".join(collect).decode("utf-8", "replace"))
+        _print_screen(collect)
         return 0
     finally:
         client.close()
@@ -221,6 +231,16 @@ def cmd_catalog(args):
         return 0
     finally:
         client.close()
+
+
+def cmd_tui(args):
+    from .tui import main as tui_main
+    argv = ["--host", args.host, "--port", str(args.port), "--token", args.token]
+    if args.tls:
+        argv.append("--tls")
+    if args.server_hostname:
+        argv += ["--server-hostname", args.server_hostname]
+    return tui_main(argv)
 
 
 def main(argv=None):
@@ -263,6 +283,10 @@ def main(argv=None):
     pcat = sub.add_parser("catalog", help="dump the Beduino topic catalog as JSON")
     _add_conn(pcat)
     pcat.set_defaults(func=cmd_catalog)
+
+    pt = sub.add_parser("tui", help="open the curses terminal view (TUI)")
+    _add_conn(pt)
+    pt.set_defaults(func=cmd_tui)
 
     args = ap.parse_args(argv)
     try:

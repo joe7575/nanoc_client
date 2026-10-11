@@ -127,6 +127,9 @@ function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('nanoc.check', checkProgram)
   );
+  context.subscriptions.push(
+    vscode.commands.registerCommand('nanoc.openTerminal', openTerminal)
+  );
   diagnostics = vscode.languages.createDiagnosticCollection('nanoc');
   context.subscriptions.push(diagnostics);
   context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(runCheck));
@@ -146,6 +149,40 @@ function resolveChecker() {
   const candidate = path.join(os.homedir(), '.local', 'venvs', 'nanoc', 'bin', 'nanoc-check');
   if (fs.existsSync(candidate)) return candidate;
   return 'nanoc-check';
+}
+
+function resolveTui() {
+  const configured = vscode.workspace.getConfiguration('nanoc').get('tuiPath');
+  if (configured) return configured;
+  const candidate = path.join(os.homedir(), '.local', 'venvs', 'nanoc', 'bin', 'nanoc-tui');
+  if (fs.existsSync(candidate)) return candidate;
+  return 'nanoc-tui';
+}
+
+// Open the NanoC terminal (nanoc-tui) in an integrated terminal, using the
+// connection info of the active debug session. Keeps the Debug Console for
+// debugger messages only.
+function openTerminal() {
+  const session = vscode.debug.activeDebugSession;
+  if (!session || session.type !== 'nanoc') {
+    vscode.window.showErrorMessage(
+      'NanoC: start/attach a debug session first, then open the terminal.');
+    return;
+  }
+  const cfg = session.configuration || {};
+  const args = [
+    '--host', String(cfg.host || '127.0.0.1'),
+    '--port', String(cfg.port || 41100),
+    '--token', String(cfg.token || ''),
+  ];
+  if (cfg.tls) args.push('--tls');
+  if (cfg.serverHostname) args.push('--server-hostname', String(cfg.serverHostname));
+  const term = vscode.window.createTerminal({
+    name: 'NanoC',
+    shellPath: resolveTui(),
+    shellArgs: args,
+  });
+  term.show(true);
 }
 
 function runCheck(document) {

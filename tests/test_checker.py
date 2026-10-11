@@ -30,6 +30,9 @@ class TestChecker(unittest.TestCase):
     def test_assignment_declares(self):
         self.assertEqual(check('x = 5\nprintf("%d\\n", x)\n'), [])
 
+    def test_log_is_known(self):
+        self.assertEqual(check('log("started")\n'), [])
+
 
 if __name__ == "__main__":
     unittest.main()

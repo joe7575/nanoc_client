@@ -34,7 +34,7 @@ TYPES = {"int32", "uint32", "str8", "void"}
 
 # Built-in / API functions available in NanoC
 BUILTINS = {
-    "printf", "sleep", "millis", "key",
+    "printf", "sleep", "millis", "key", "log",
     "ta_send", "ta_send_s", "ta_signal",
     "ta_cmd", "ta_cmd_s",
     "ta_recv", "ta_port", "ta_topic", "ta_payload",

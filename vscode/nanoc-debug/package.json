@@ -2,7 +2,7 @@
   "name": "nanoc-debug",
   "displayName": "NanoC Debugger",
   "description": "Debug NanoC controllers (in Luanti/Minetest) via the nanoc-dap adapter.",
-  "version": "0.3.9",
+  "version": "0.4.0",
   "publisher": "joe7575",
   "license": "AGPL-3.0-or-later",
   "engines": {
@@ -17,7 +17,8 @@
     "onLanguage:nanoc",
     "onCommand:nanoc.upload",
     "onCommand:nanoc.download",
-    "onCommand:nanoc.check"
+    "onCommand:nanoc.check",
+    "onCommand:nanoc.openTerminal"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -39,12 +40,22 @@
         "command": "nanoc.check",
         "title": "Check Program (lint)",
         "category": "NanoC"
+      },
+      {
+        "command": "nanoc.openTerminal",
+        "title": "Open Terminal (nanoc-tui)",
+        "category": "NanoC"
       }
     ],
     "keybindings": [
       {
         "command": "nanoc.upload",
         "key": "ctrl+alt+u",
+        "when": "debugType == nanoc"
+      },
+      {
+        "command": "nanoc.openTerminal",
+        "key": "ctrl+alt+t",
         "when": "debugType == nanoc"
       }
     ],
@@ -60,6 +71,11 @@
           "type": "string",
           "default": "",
           "description": "Path to the nanoc-check linter executable. Leave empty to auto-detect."
+        },
+        "nanoc.tuiPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the nanoc-tui executable. Leave empty to auto-detect."
         }
       }
     },
@@ -92,7 +108,8 @@
               "token": { "type": "string", "default": "", "description": "Controller external token" },
               "source": { "type": "string", "description": "Path to the matching .nanoc source file (used for stack traces)" },
               "program": { "type": "string", "description": "Path to the .nanoc file to upload on start (use ${file})" },
-              "upload": { "type": "boolean", "default": false, "description": "Upload 'program' before starting" }
+              "upload": { "type": "boolean", "default": false, "description": "Upload 'program' before starting" },
+              "terminalInConsole": { "type": "boolean", "default": false, "description": "Also mirror program output into the Debug Console (normally use the NanoC terminal instead)" }
             }
           },
           "launch": {
@@ -103,7 +120,8 @@
               "token": { "type": "string", "default": "" },
               "source": { "type": "string" },
               "program": { "type": "string" },
-              "upload": { "type": "boolean", "default": false }
+              "upload": { "type": "boolean", "default": false },
+              "terminalInConsole": { "type": "boolean", "default": false, "description": "Also mirror program output into the Debug Console" }
             }
           }
         },

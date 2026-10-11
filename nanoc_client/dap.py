@@ -17,6 +17,7 @@ import threading
 
 from . import protocol as p
 from .client import NanocClient, NanocError
+from .screen import Screen
 
 
 class DapError(Exception):
@@ -37,6 +38,9 @@ class DapServer:
         self._attached_state = None
         self._upload_on_start = False
         self._running = True
+        self.screen = Screen()
+        self._screen_last = self.screen.snapshot()
+        self._terminal_in_console = False
         self._reader = None
 
     # -- DAP framing (stdio) ------------------------------------------------
@@ -108,9 +112,27 @@ class DapServer:
             while self._running:
                 channel, payload = self.client.recv_frame()
                 if channel is p.Channel.TERMINAL:
+                    # Program output normally goes to the dedicated NanoC
+                    # terminal (nanoc-tui), keeping the Debug Console for
+                    # debugger messages only. Set "terminalInConsole": true in
+                    # launch.json to mirror it into the Debug Console too.
+                    if self._terminal_in_console:
+                        self.screen.feed(payload)
+                        for _row, text in self.screen.changed_rows(self._screen_last):
+                            self.send_event("output", {
+                                "category": "stdout",
+                                "output": text + "\n",
+                            })
+                        self._screen_last = self.screen.snapshot()
+                        if self.screen.take_bell():
+                            self.send_event("output",
+                                            {"category": "stdout", "output": "\a"})
+                elif channel is p.Channel.LOG:
+                    # NanoC log() messages -> Debug Console.
+                    text = payload.decode("utf-8", "replace")
                     self.send_event("output", {
-                        "category": "stdout",
-                        "output": payload.decode("utf-8", "replace"),
+                        "category": "console",
+                        "output": text if text.endswith("\n") else text + "\n",
                     })
                 elif channel is p.Channel.DEBUG:
                     cmd, data = p.decode_debug(payload)
@@ -142,6 +164,9 @@ class DapServer:
             tls=bool(args.get("tls", False)),
         )
         self.client.connect()
+        self._terminal_in_console = bool(args.get("terminalInConsole", False))
+        self.screen.clear_screen()
+        self._screen_last = self.screen.snapshot()
         program = args.get("source") or args.get("program")
         env_active = os.environ.get("NANOC_ACTIVE")
         if (not program or not os.path.exists(program)) and env_active and os.path.exists(env_active):

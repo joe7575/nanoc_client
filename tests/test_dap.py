@@ -8,6 +8,7 @@ import threading
 import time
 import unittest
 
+from nanoc_client import dap, protocol as p
 from nanoc_client.mock_server import MockServer
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -115,6 +116,52 @@ class TestDapAdapter(unittest.TestCase):
             self.assertIn("int32 x = 7", self.srv.program)
         finally:
             os.unlink(path)
+
+
+class _FakeClient:
+    def __init__(self, frames):
+        self._frames = list(frames)
+
+    def recv_frame(self):
+        if self._frames:
+            return self._frames.pop(0)
+        raise OSError("done")
+
+
+class _CaptureDap(dap.DapServer):
+    def __init__(self):
+        super().__init__()
+        self.outputs = []
+
+    def send_event(self, event, body=None):
+        if event == "output" and body:
+            self.outputs.append(body.get("output", ""))
+
+
+class TestTerminalInConsole(unittest.TestCase):
+    def _run(self, terminal_in_console):
+        srv = _CaptureDap()
+        srv._terminal_in_console = terminal_in_console
+        srv.client = _FakeClient([(p.Channel.TERMINAL, b"hello world\n")])
+        srv._running = True
+        srv._reader_loop()          # stops on the OSError after the frame
+        return "".join(srv.outputs)
+
+    def test_default_off(self):
+        self.assertFalse(dap.DapServer()._terminal_in_console)
+
+    def test_off_keeps_console_clean(self):
+        self.assertNotIn("hello world", self._run(False))
+
+    def test_on_mirrors_output(self):
+        self.assertIn("hello world", self._run(True))
+
+    def test_log_channel_goes_to_console(self):
+        srv = _CaptureDap()
+        srv.client = _FakeClient([(p.Channel.LOG, b"a log line\n")])
+        srv._running = True
+        srv._reader_loop()
+        self.assertIn("a log line", "".join(srv.outputs))
 
 
 if __name__ == "__main__":

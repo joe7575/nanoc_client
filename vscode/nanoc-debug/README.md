@@ -52,7 +52,18 @@ attaches and the controller keeps whatever program it had. Breakpoints are
 re-applied automatically after the upload.
 
 Start it with F5. Breakpoints, stepping, the call stack and the Globals/Locals
-variables view are available; `printf` output appears in the Debug Console.
+variables view are available.
+
+## Terminal
+
+Program output (`printf` / termlib) is shown in a dedicated **NanoC terminal**
+rather than the Debug Console, so debugger messages and program output stay
+separate. Open it with **NanoC: Open Terminal (nanoc-tui)** (Ctrl+Alt+T) while a
+debug session is active; it runs `nanoc-tui` from the `nanoc_client` package in
+an integrated terminal (full colours, cursor moves, F1–F8 and keyboard input).
+The Debug Console keeps only debugger messages. Set `"terminalInConsole": true`
+in the launch configuration to also mirror the program output into the Debug
+Console.
 
 ## Edit / upload / download
 
