@@ -66,6 +66,14 @@ While a debug session is active:
 Typical loop: attach (F5) → download → edit/save → upload (Ctrl+Alt+U) →
 Continue (F5) → debug.
 
+## Notes
+
+- `program`/`source` with `${file}` use the *active editor*. If the active tab
+  points to a missing file (VS Code restored a deleted tab), the extension
+  falls back to the single `.nanoc`/`.nc` file in the workspace.
+- Breakpoints belong to a file; breakpoints for other files are ignored, so a
+  leftover breakpoint set in a deleted file cannot hijack the uploaded program.
+
 ## Linting
 
 `.nanoc` files (`.nc` alias) are linted automatically on save (and on open) via the

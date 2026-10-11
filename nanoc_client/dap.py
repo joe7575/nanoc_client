@@ -144,12 +144,6 @@ class DapServer:
         self.client.connect()
         program = args.get("source") or args.get("program")
         env_active = os.environ.get("NANOC_ACTIVE")
-        self.send_event("output", {
-            "category": "stdout",
-            "output": (f"NanoC adapter: source={args.get('source')!r} "
-                       f"program={args.get('program')!r} "
-                       f"NANOC_ACTIVE={env_active!r} exists={bool(program and os.path.exists(program))}\n"),
-        })
         if (not program or not os.path.exists(program)) and env_active and os.path.exists(env_active):
             program = env_active
         if not program or not os.path.exists(program):

@@ -41,10 +41,6 @@ class NanocAdapterFactory {
     }
     if (editor && editor.document.fileName && fs.existsSync(editor.document.fileName)) {
       env.NANOC_ACTIVE = editor.document.fileName;
-      log('adapter: NANOC_ACTIVE=' + editor.document.fileName);
-    } else {
-      log('adapter: no active file (' +
-        (editor ? editor.document.fileName : 'none') + ')');
     }
     return new vscode.DebugAdapterExecutable(command, [], { env });
   }
@@ -84,8 +80,6 @@ class NanocConfigProvider {
       .replace(/\$\{workspaceFolder\}/g, root);
     if (config.program) config.program = expand(config.program);
     if (config.source) config.source = expand(config.source);
-    log('resolve: active="' + active + '" program="' + config.program +
-      '" upload=' + config.upload);
 
     if (!config.upload || (config.program && fs.existsSync(config.program))) {
       return config;
