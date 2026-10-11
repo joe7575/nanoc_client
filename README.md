@@ -77,6 +77,30 @@ local `nanoc-check`); problems appear in the Problems panel and jump to the
 line on click (command **NanoC: Check Program (lint)**). Other DAP clients
 (nvim-dap, Emacs dap-mode) can use the `nanoc-dap` executable directly.
 
+## Scriptable CLI (`nanoc`)
+
+Non-interactive commands, useful for scripts and AI agents (OpenCode, Claude,
+…):
+
+```bash
+nanoc check app.nanoc                    # local lint (file:line: error)
+nanoc push  app.nanoc --token T          # upload + compile (errors on stderr)
+nanoc run   --token T                    # resume the controller
+nanoc stop  --token T                    # halt (pause)
+nanoc read  --token T --seconds 3        # print terminal output for 3 s
+nanoc exec  app.nanoc --token T --seconds 3   # push + run + read (one call)
+```
+
+Connection flags: `--host` (127.0.0.1), `--port` (41100), `--token` (from the
+controller form), `--tls`. `nanoc exec` is the one-shot loop for automation:
+write → exec → read output → improve.
+
+## Focus
+
+Only one client may debug a controller at a time. The first `attach` owns it;
+other clients stay terminal viewers (they receive output) and get `DENIED` for
+control commands. `detach` or disconnect releases the focus.
+
 ## Status
 
 - `protocol.py` – framing, handshake, debug command vocabulary (protocol v1)

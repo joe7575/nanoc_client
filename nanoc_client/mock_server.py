@@ -26,10 +26,11 @@ def _ascii_to_words(s):
 
 
 class MockServer:
-    def __init__(self, host="127.0.0.1", port=40000, token="secret"):
+    def __init__(self, host="127.0.0.1", port=40000, token="secret", deny_attach=False):
         self.host = host
         self.port = port
         self.token = token
+        self.deny_attach = deny_attach
         self._sock = None
         self._conn = None
         self._running = False
@@ -129,9 +130,12 @@ class MockServer:
         resp = [int(cmd), int(p.Status.OK)]
 
         if cmd == p.Command.ATTACH:
-            self.halted = False
-            self.mode = p.Mode.RUN
-            resp += [int(self.mode), int(self.reason), self.line, self.pc]
+            if self.deny_attach:
+                resp = [int(cmd), int(p.Status.DENIED)]
+            else:
+                self.halted = False
+                self.mode = p.Mode.RUN
+                resp += [int(self.mode), int(self.reason), self.line, self.pc]
         elif cmd == p.Command.DETACH:
             pass
         elif cmd == p.Command.STATE:

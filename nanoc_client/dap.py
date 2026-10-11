@@ -33,6 +33,7 @@ class DapServer:
         self._source_path = None
         self._breakpoints = []
         self._last_line = 1
+        self._attached_state = None
         self._running = True
         self._reader = None
 
@@ -214,6 +215,18 @@ class DapServer:
 
     def _do_attach(self, req, args):
         self._connect(args)
+        cmd, state = self._remote_request(p.Command.ATTACH, 1, 0)
+        if state and state[0] == p.Status.DENIED:
+            self.send_response(
+                req, success=False,
+                message="controller is already being debugged by another client")
+            self._running = False
+            try:
+                self.client.close()
+            except OSError:
+                pass
+            return
+        self._attached_state = state
         self.send_response(req)
 
     _do_launch = _do_attach

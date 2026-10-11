@@ -25,6 +25,7 @@ class NanocClient:
         tls: bool = False,
         server_hostname: Optional[str] = None,
         timeout: float = 10.0,
+        blocking: bool = True,
     ):
         self.host = host
         self.port = port
@@ -32,6 +33,7 @@ class NanocClient:
         self.tls = tls
         self.server_hostname = server_hostname or host
         self.timeout = timeout
+        self.blocking = blocking
         self.session = 0
         self._sock: Optional[socket.socket] = None
         self._buf = b""
@@ -45,9 +47,10 @@ class NanocClient:
         raw.settimeout(self.timeout)
         self._sock = raw
         self._handshake()
-        # After the handshake, block indefinitely: the reader thread waits for
-        # asynchronous terminal/debug frames and must not hit a read timeout.
-        raw.settimeout(None)
+        # After the handshake: blocking for interactive readers (default), or
+        # keep the timeout for scripted request/response use.
+        if self.blocking:
+            raw.settimeout(None)
 
     def close(self) -> None:
         if self._sock is not None:
