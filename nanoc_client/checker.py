@@ -34,14 +34,16 @@ TYPES = {"int32", "uint32", "str8", "void"}
 
 # Built-in / API functions available in NanoC
 BUILTINS = {
-    "printf", "sleep", "millis", "key", "log",
+    "printf", "sleep", "millis", "key", "log", "breakpoint",
     "ta_send_cmd", "ta_send_cmd_s", "ta_signal",
     "ta_req_data", "ta_req_data_s",
     "ta_recv", "ta_port", "ta_topic", "ta_payload",
     "ta_recv_sig", "ta_sig_port", "ta_sig_val",
-    "rnd", "abs", "len", "val", "instr", "string$", "free",
-    "left$", "right$", "mid$", "str$", "hex$",
+    "rnd", "abs", "len", "val", "instr", "string$", "string", "free",
+    "left$", "left", "right$", "right", "mid$", "mid",
+    "str$", "str", "hex$", "hex",
     "u8", "u16", "u32", "copy",
+    "str2arr", "arr2str$", "arr2str",
 }
 
 PREDEFINED: set = set()
