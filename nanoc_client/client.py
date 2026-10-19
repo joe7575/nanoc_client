@@ -73,7 +73,13 @@ class NanocClient:
             raise NanocError(f"expected CONTROL during handshake, got {channel}")
         status, server_protocol = p.decode_hello_ack(payload)
         if status is not p.HelloStatus.OK:
-            raise NanocError(f"handshake failed: {status.name}")
+            detail = {
+                p.HelloStatus.BAD_TOKEN: "bad token",
+                p.HelloStatus.NOT_LOADED:
+                    "controller not loaded (area inactive; a player must be nearby)",
+                p.HelloStatus.BUSY: "busy",
+            }.get(status, status.name)
+            raise NanocError(f"handshake failed: {detail}")
         if server_protocol != p.PROTOCOL:
             raise NanocError(
                 f"protocol mismatch: server={server_protocol} client={p.PROTOCOL}"

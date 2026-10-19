@@ -67,6 +67,7 @@ class Status(IntEnum):
     NO_CODE = 7
     DENIED = 8
     UNKNOWN_CMD = 9
+    NOT_LOADED = 10
 
 
 class Mode(IntEnum):
@@ -99,6 +100,7 @@ class HelloStatus(IntEnum):
     BAD_PROTOCOL = 1
     BAD_TOKEN = 2
     BUSY = 3
+    NOT_LOADED = 4
 
 
 @dataclass
