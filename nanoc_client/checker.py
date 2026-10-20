@@ -36,7 +36,7 @@ TYPES = {"int32", "uint32", "str8", "void"}
 BUILTINS = {
     "printf", "sleep", "millis", "key", "log", "breakpoint",
     "ta_send_cmd", "ta_send_cmd_s", "ta_signal",
-    "ta_req_data", "ta_req_data_s",
+    "ta_req_data", "ta_req_data_s", "ta_req_data_str",
     "ta_recv", "ta_port", "ta_topic", "ta_payload",
     "ta_recv_sig", "ta_sig_port", "ta_sig_val",
     "rnd", "abs", "len", "val", "instr", "string$", "string", "free",
