@@ -165,6 +165,24 @@ RESOURCES = [
         "mimeType": "text/plain",
         "file": "examples/factory_control.nanoc",
     },
+    {
+        "uri": "nanoc://examples/fab_control",
+        "name": "Example: electronic fab control",
+        "description": "Menu-driven electronic fab production via a recipe "
+                       "adapter: ingredient checks, sub-crafts, output and "
+                       "return pushers.",
+        "mimeType": "text/plain",
+        "file": "examples/fab_control.nanoc",
+    },
+    {
+        "uri": "nanoc://examples/oven_control",
+        "name": "Example: furnace control",
+        "description": "Menu-driven furnace production via a recipe adapter: "
+                       "ingredient checks, intermediate products, output, "
+                       "return and eject pushers.",
+        "mimeType": "text/plain",
+        "file": "examples/oven_control.nanoc",
+    },
 ]
 
 

@@ -36,6 +36,10 @@ COPIES = [
      "examples/termlib_demo.nanoc"),
     ("examples/factory_control.nanoc", "nanoc_mod",
      "examples/factory_control.nanoc"),
+    ("examples/fab_control.nanoc", "nanoc_mod",
+     "examples/fab_control.nanoc"),
+    ("examples/oven_control.nanoc", "nanoc_mod",
+     "examples/oven_control.nanoc"),
 ]
 
 

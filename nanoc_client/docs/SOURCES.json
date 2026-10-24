@@ -1,11 +1,19 @@
 {
   "beduino": {
-    "commit": "8816038c17755ce4dc99d1f2a2806cff0c349539",
-    "dirty": true
+    "commit": "a1a56a281987f178f622b69611d8053c5ba40755",
+    "dirty": false
   },
   "files": {
+    "examples/fab_control.nanoc": {
+      "file": "examples/fab_control.nanoc",
+      "root": "nanoc_mod"
+    },
     "examples/factory_control.nanoc": {
       "file": "examples/factory_control.nanoc",
+      "root": "nanoc_mod"
+    },
+    "examples/oven_control.nanoc": {
+      "file": "examples/oven_control.nanoc",
       "root": "nanoc_mod"
     },
     "examples/techage_monitor.nanoc": {
@@ -38,7 +46,7 @@
     "dirty": false
   },
   "nanoc_mod": {
-    "commit": "4e28a247f2e4528f017d76418ce9f461d1daf761",
-    "dirty": true
+    "commit": "001c2f8fce923cec73205d94149a68600c568f95",
+    "dirty": false
   }
 }
