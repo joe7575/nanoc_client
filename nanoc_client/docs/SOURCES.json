@@ -1,6 +1,6 @@
 {
   "beduino": {
-    "commit": "d6ba8288ec7ce983ebf5968bec865162e2a29654",
+    "commit": "8816038c17755ce4dc99d1f2a2806cff0c349539",
     "dirty": false
   },
   "files": {
@@ -34,7 +34,7 @@
     "dirty": true
   },
   "nanoc_mod": {
-    "commit": "5b7fe0880f5c6044a832a274c221bf8ba4f633c2",
-    "dirty": false
+    "commit": "450bc6c0e384752c977a0a348c1af101f85ff06d",
+    "dirty": true
   }
 }

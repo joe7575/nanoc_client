@@ -1,4 +1,4 @@
-"""NanoC TCP wire protocol (protocol version 1).
+"""NanoC TCP wire protocol (protocol version 2).
 
 See nanoc_lib/doc/protocol.md. All multi-byte integers are little-endian.
 """
@@ -9,12 +9,12 @@ import struct
 from dataclasses import dataclass
 from enum import IntEnum
 
-PROTOCOL = 1
+PROTOCOL = 2
 
 MAGIC0 = 0x4E  # 'N'
 MAGIC1 = 0x43  # 'C'
 
-HEADER = struct.Struct("<4B I 2H")  # magic0, magic1, version, channel, session, length, reserved
+HEADER = struct.Struct("<4B I I")  # magic0, magic1, version, channel, session, length
 HEADER_SIZE = HEADER.size  # 12
 
 TERMINAL_WIDTH = 80
@@ -118,14 +118,13 @@ class Frame:
             int(self.channel),
             self.session,
             len(self.payload),
-            0,
         ) + self.payload
 
     @classmethod
     def parse_header(cls, header: bytes) -> "FrameHeader":
         if len(header) != HEADER_SIZE:
             raise ValueError("short frame header")
-        magic0, magic1, version, channel, session, length, reserved = HEADER.unpack(header)
+        magic0, magic1, version, channel, session, length = HEADER.unpack(header)
         if magic0 != MAGIC0 or magic1 != MAGIC1:
             raise ValueError("bad magic")
         if version != PROTOCOL:
