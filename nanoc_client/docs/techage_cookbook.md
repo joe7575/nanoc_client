@@ -28,7 +28,9 @@ topics >= 192; all other topics use numeric arrays.
 | 129 | request | - | state: 1 running, 2 blocked, 3 standby, 6 stopped |
 
 Start sequence: set filter (65), set limit (20), start (1). Poll 150 until it
-reaches the limit. The pusher stops itself at the limit.
+reaches the limit. The pusher stops itself at the limit. The pusher's `main`
+inventory (visible in `nanoc_scan`) holds the configured filter item, not a
+buffer of items waiting to be pushed.
 
 ## Autocrafter (ta4_autocrafter)
 
@@ -93,8 +95,43 @@ port 0), without a formspec. Right-click re-detects.
 | 162 | request | `[idx,slot]` | input count |
 | 163 | request | `[idx]` | number of inputs |
 
+Duplicate recipe slots are listed separately (bronze is `copper_ingot` three
+times plus `tin_ingot`). Sum topic 162 per item name before checking stock or
+feeding the machine, otherwise only one of the duplicates is produced.
+
+## Furnace (ta3_furnace / ta4_furnace_top)
+
+| Topic | Kind | Payload | Meaning |
+|---|---|---|---|
+| 1 | send | `[0\|1]` | stop / start |
+| 129 | request | - | 1 running, 2 blocked, 3 standby, 4 no power, 5 fault, 6 stopped |
+| 141 | request | - | configured output name (`nvm.output`), **not** the `dst` contents |
+
+Inputs go into `src` (2x2). A pusher can only pull from `dst`; leftover `src`
+items stay until a matching recipe consumes them (there is no remote flush).
+Push the ingredients first, then select the output via the adapter (topic 64),
+then start.
+
+## Electronic fab (ta4_electronic_fab)
+
+| Topic | Kind | Payload | Meaning |
+|---|---|---|---|
+| 1 | send | `[0\|1]` | stop / start |
+| 129 | request | - | state as above |
+
+Recipes come from the adapter (topic 64). Output **and waste** are placed in
+`dst`; e.g. chip recipes return `basic_materials:empty_spool`. Pull the product
+with a filtered pusher, but also pull or clear the waste, otherwise `dst` fills
+up and the fab stops.
+
 ## NanoC notes for plant programs
 
+- `ta_send_cmd` and `ta_req_data(_s)` return a value, so a **bare call as a
+  statement is a syntax error**. Assign the status (`g_rc = ta_send_cmd(...)`)
+  or use the result in an expression. `sleep()` and `log()` return nothing and
+  may stand alone.
+- Recipe data lists duplicate inputs as separate slots. Sum the counts per item
+  name before checking stock or feeding a machine (bronze: 3x copper + 1x tin).
 - `for i = 1 to 0` executes the body **once** (do-while); guard descending
   ranges with `if (...)`.
 - User functions are statements, not expressions; store results in a global

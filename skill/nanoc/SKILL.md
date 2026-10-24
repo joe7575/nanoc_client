@@ -51,7 +51,8 @@ normally do not have these. Use the GitHub repositories:
 
 - Reference: `nanoc://language` (primer), `nanoc://manual`, `nanoc://reference`,
   `nanoc://topics`, `nanoc://cookbook`, `nanoc://examples/techage_monitor`,
-  `nanoc://examples/termlib_demo`, `nanoc://examples/factory_control`.
+  `nanoc://examples/termlib_demo`, `nanoc://examples/factory_control`,
+  `nanoc://examples/fab_control`, `nanoc://examples/oven_control`.
 - NanoC is C-like but not C: `func` instead of `void`, no floats, `//`
   comments, `{ }` blocks, no semicolons at line end, `int32`/`str8`/`u8`/`u16`/`u32`.
 - Techage calls: `ta_send_cmd(number, topic, payload)` and
@@ -73,6 +74,11 @@ normally do not have these. Use the GitHub repositories:
   read-only. Use global `str8` variables for mutable strings.
 - No structs, no 2-D arrays, no floats; a single array block is max 127 words
   (512 bytes). The call stack is 128 words; deep recursion overflows.
+- `ta_send_cmd`/`ta_req_data(_s)` return a value, so use them in an assignment
+  (`g_rc = ta_send_cmd(...)`). A bare call as a statement is a syntax error;
+  void functions like `sleep()`/`log()` are fine.
+- Recipe lists repeat duplicate inputs as separate slots; sum them per item
+  name before checking stock or feeding a machine.
 
 ## Pitfalls
 
@@ -82,6 +88,9 @@ normally do not have these. Use the GitHub repositories:
 - The controller must be in a loaded/forceloaded area, otherwise `NOT_LOADED`.
 - `printf` output comes back from `nanoc_read`/`nanoc_exec`; `log("...")` lines
   are prefixed `[log]`.
+- In `nanoc_scan`, a pusher's `main` item is its configured filter, not a
+  stuck item. Furnace topic 141 is the configured output name, not inventory;
+  leftover furnace `src` items cannot be pulled by pushers.
 - Do not move blocks or change the world (move/turn/pusher commands) unless the
   user explicitly asks for it. Prefer machine state commands.
 
