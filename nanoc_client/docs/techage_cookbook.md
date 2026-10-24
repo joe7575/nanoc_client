@@ -82,7 +82,7 @@ port 0), without a formspec. Right-click re-detects.
 
 | Topic | Kind | Payload | Meaning |
 |---|---|---|---|
-| 64 | send | `"idx"` | select recipe on the target (electronic fab) |
+| 64 | send | `"idx"` | select the recipe on the target (furnace output / fab recipe); push furnace inputs first |
 | 156 | request | - | number of recipes |
 | 158 | request | `[idx]` | output count |
 | 160 | request | - | target machine node number |
