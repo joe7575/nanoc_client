@@ -76,6 +76,7 @@ class TestMcpServer(unittest.TestCase):
         self.assertIn("nanoc://workflow", uris)
         self.assertIn("nanoc://language", uris)
         self.assertIn("nanoc://topics", uris)
+        self.assertIn("nanoc://examples/plant_control", uris)
         r = self._call(3, "resources/read", {"uri": "nanoc://workflow"})
         text = r["result"]["contents"][0]["text"]
         self.assertIn("nanoc_scan", text)

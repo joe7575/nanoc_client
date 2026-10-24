@@ -4,6 +4,10 @@
     "dirty": false
   },
   "files": {
+    "examples/plant_control.nanoc": {
+      "file": "examples/plant_control.nanoc",
+      "root": "nanoc_mod"
+    },
     "examples/techage_monitor.nanoc": {
       "file": "examples/techage_monitor.nanoc",
       "root": "nanoc_mod"
@@ -34,7 +38,7 @@
     "dirty": true
   },
   "nanoc_mod": {
-    "commit": "450bc6c0e384752c977a0a348c1af101f85ff06d",
-    "dirty": true
+    "commit": "6d0a0fcba0bb3289dc7a4ea350c29586cfa68767",
+    "dirty": false
   }
 }
