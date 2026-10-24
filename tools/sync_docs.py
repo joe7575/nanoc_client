@@ -34,8 +34,8 @@ COPIES = [
      "examples/techage_monitor.nanoc"),
     ("examples/termlib_demo.nanoc", "nanoc_mod",
      "examples/termlib_demo.nanoc"),
-    ("examples/plant_control.nanoc", "nanoc_mod",
-     "examples/plant_control.nanoc"),
+    ("examples/factory_control.nanoc", "nanoc_mod",
+     "examples/factory_control.nanoc"),
 ]
 
 

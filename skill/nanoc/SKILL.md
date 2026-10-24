@@ -51,7 +51,7 @@ normally do not have these. Use the GitHub repositories:
 
 - Reference: `nanoc://language` (primer), `nanoc://manual`, `nanoc://reference`,
   `nanoc://topics`, `nanoc://cookbook`, `nanoc://examples/techage_monitor`,
-  `nanoc://examples/termlib_demo`, `nanoc://examples/plant_control`.
+  `nanoc://examples/termlib_demo`, `nanoc://examples/factory_control`.
 - NanoC is C-like but not C: `func` instead of `void`, no floats, `//`
   comments, `{ }` blocks, no semicolons at line end, `int32`/`str8`/`u8`/`u16`/`u32`.
 - Techage calls: `ta_send_cmd(number, topic, payload)` and

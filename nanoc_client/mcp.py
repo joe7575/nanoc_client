@@ -157,13 +157,13 @@ RESOURCES = [
         "file": "examples/termlib_demo.nanoc",
     },
     {
-        "uri": "nanoc://examples/plant_control",
-        "name": "Example: plant control",
+        "uri": "nanoc://examples/factory_control",
+        "name": "Example: factory control",
         "description": "Menu-driven TA4 production: recipe block, ingredient "
                        "checks, pushers, autocrafter, intermediates and a "
                        "status tower.",
         "mimeType": "text/plain",
-        "file": "examples/plant_control.nanoc",
+        "file": "examples/factory_control.nanoc",
     },
 ]
 
