@@ -89,9 +89,9 @@ port 0), without a formspec. Right-click re-detects.
 | 193 | request | `"idx"` | output item name |
 | 194 | request | `"idx,slot"` | input item name |
 | 195 | request | `"name"` | recipe index for an output name (0 = not found) |
-| 196 | request | `[idx]` | furnace recipe time; 0 for the fab |
-| 197 | request | `[idx,slot]` | input count |
-| 198 | request | `[idx]` | number of inputs |
+| 161 | request | `[idx]` | furnace recipe time; 0 for the fab |
+| 162 | request | `[idx,slot]` | input count |
+| 163 | request | `[idx]` | number of inputs |
 
 ## NanoC notes for plant programs
 
