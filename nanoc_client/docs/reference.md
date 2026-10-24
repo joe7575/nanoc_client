@@ -308,6 +308,12 @@ func int32 max(int32 a, int32 b) {
 }
 ```
 
+A call with a return value can be used in an expression, e.g.
+`int32 x = add(1, 2) * 3`. For calls in expressions the function must be
+defined before the call (recursion works because the return type is known at
+the definition). Plain statement calls may still reference functions defined
+later in the file.
+
 ### Local Variables
 
 All variables declared inside a function are **local** (stack-based):
@@ -401,6 +407,10 @@ for i = 10 to 0 step -1 {
     printf("Countdown: %d\n", i)
 }
 ```
+
+An empty range is skipped: with a positive step the body does not run when
+`start > end`; with a negative step it does not run when `start < end`.
+This works for global and function-local loop variables.
 
 ### while Loop
 
@@ -729,4 +739,6 @@ end
 - No floating-point numbers
 - No multi-dimensional arrays
 - No function-local array declarations (use global arrays or array reference parameters)
+- A function used in an expression must be defined before the call; statement
+  calls may use forward references.
 - At most two temporary strings per statement: results of string functions and of `+` are kept in two alternating buffers, so a third one overwrites the first. Example: `printf("%s %s %s", left(s, 1), mid(s, 1, 1), right(s, 1))` prints the result of `right()` twice. Split the statement or assign intermediate results to `str8` variables.

@@ -65,14 +65,12 @@ normally do not have these. Use the GitHub repositories:
 
 ## NanoC quirks (compiler/VM)
 
-- `for i = 1 to 0` executes the body **once** (do-while). Guard descending
-  ranges with `if (...)`.
-- User functions are statements, not expressions. Return values via a global
-  (e.g. `g_res`); external `ta_*` calls do work in expressions.
-- At most 32 forward declarations; define functions before use or inline
-  helpers.
-- Strings inside functions use global storage; locals are read-only. Use
-  global `str8` variables for mutable strings.
+- nanoclib **>= 0.2.2**: user functions with return values work in
+  expressions; empty `for` ranges are skipped; only genuinely forward calls
+  count against the 32-entry patch list. On older cores use a global result
+  variable and guard `for i = 1 to 0` with `if (...)`.
+- Strings inside functions use global storage; locals/parameters are
+  read-only. Use global `str8` variables for mutable strings.
 - No structs, no 2-D arrays, no floats; a single array block is max 127 words
   (512 bytes). The call stack is 128 words; deep recursion overflows.
 
