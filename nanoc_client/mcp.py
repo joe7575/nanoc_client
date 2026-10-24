@@ -102,6 +102,15 @@ RESOURCES = [
         "file": "workflow.md",
     },
     {
+        "uri": "nanoc://cookbook",
+        "name": "Techage cookbook",
+        "description": "Verified TA4 behaviour: pusher filter/limit, autocrafter "
+                       "recipe reference, chest/recipe-block topics, signal "
+                       "tower, NanoC pitfalls.",
+        "mimeType": "text/markdown",
+        "file": "techage_cookbook.md",
+    },
+    {
         "uri": "nanoc://language",
         "name": "NanoC language primer",
         "description": "Syntax rules and examples for writing NanoC programs.",

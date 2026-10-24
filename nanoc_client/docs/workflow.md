@@ -18,6 +18,9 @@ controller. Without it the tools fail.
    and `edges`. Use the **`number`** fields; that is how programs address nodes.
 2. `nanoc_catalog` — dump the topic catalog (topic -> kind/name/payload/response)
    and the node name-pattern rules. Use it to pick the right topic for each node.
+   For verified block behaviour (pusher filter/limit, autocrafter recipe
+   reference, chest and recipe-block topics, signal tower), read
+   `nanoc://cookbook`.
 3. Write the program (see `nanoc://language`, `nanoc://manual`,
    `nanoc://reference`, `nanoc://examples/...`).
 4. `nanoc_check` — local lint before uploading. Returns `file:line: message`

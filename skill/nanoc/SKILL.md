@@ -20,16 +20,24 @@ reach it through the `nanoc_*` MCP tools.
 Do not guess node numbers or topics. Take them from scan/catalog. Only nodes
 with a numeric `number` can be addressed.
 
-## Runtime vs. development
+## Player first (normal case)
 
-**Runtime** questions ("what nodes exist, what is a node's number/state/
-inventory, what is connected, what did we do so far"): call `nanoc_scan`,
-`nanoc_catalog` and `nanoc_read`. Do not read the techage source for this; it
-cannot know the running world.
+A normal player has **no mods and no libs** on the PC. Do not search the
+filesystem for `techage`/`nanoc` and do not fetch GitHub. Everything needed is
+served by the MCP server:
+- `nanoc://workflow`, `nanoc://language`, `nanoc://manual`,
+  `nanoc://reference`, `nanoc://topics`, `nanoc://cookbook`,
+  `nanoc://examples/...`
+- live: `nanoc_scan`, `nanoc_catalog`, `nanoc_read`.
 
-**Development** (fixing techage/nanoc, writing or debugging a NanoC program,
-understanding compiler limits): the source is the reference and reading it is
-expected. Use the GitHub repositories (not a local checkout):
+**Runtime** questions (which nodes exist, state, inventories, connections):
+use `nanoc_scan`/`nanoc_catalog`; never read source for this.
+
+## Developer checkout only
+
+Only if the workspace actually contains the repositories (development work:
+fixing techage/nanoc or the compiler), source reading is expected. Players
+normally do not have these. Use the GitHub repositories:
 - <https://github.com/joe7575/techage> — `basis/command.lua` (send/beduino
   routing), `basic_machines/` (pusher, autocrafter, recipeblock, chests),
   `icta_controller/signaltower.lua`.
@@ -39,14 +47,10 @@ expected. Use the GitHub repositories (not a local checkout):
   inspect, extfuncs, capabilities).
 - <https://github.com/joe7575/beduino> — `BEPs/bep-005_ta_cmnd.md` (topics).
 
-If a repository is still private, the MCP resources (`nanoc://language`,
-`nanoc://manual`, `nanoc://topics`, `nanoc://examples/...`) are the fallback;
-they do not carry the mod source.
-
 ## Write and test
 
 - Reference: `nanoc://language` (primer), `nanoc://manual`, `nanoc://reference`,
-  `nanoc://topics`, `nanoc://examples/techage_monitor`,
+  `nanoc://topics`, `nanoc://cookbook`, `nanoc://examples/techage_monitor`,
   `nanoc://examples/termlib_demo`, `nanoc://examples/plant_control`.
 - NanoC is C-like but not C: `func` instead of `void`, no floats, `//`
   comments, `{ }` blocks, no semicolons at line end, `int32`/`str8`/`u8`/`u16`/`u32`.

@@ -10,9 +10,11 @@ package is self-contained when installed from git:
 | `manual.md` | `nanoc_mod/doc/manual.md` (player manual, incl. Techage) |
 | `techage_topics.md` | `beduino/BEPs/bep-005_ta_cmnd.md` (topic table) |
 | `examples/*.nanoc` | `nanoc_mod/examples/` |
+| `techage_cookbook.md` | Original here: verified TA4 API behaviour for NanoC |
 
 Do not edit them here. Run `python tools/sync_docs.py` after changing a source;
 `docs/SOURCES.json` records the source paths and git commits. The same files
 are served to AI clients over MCP as resources (`nanoc://language`,
 `nanoc://reference`, `nanoc://manual`, `nanoc://topics`,
-`nanoc://examples/...`) and as the `nanoc://workflow` quick start.
+`nanoc://examples/...`), as `nanoc://cookbook` and as the `nanoc://workflow`
+quick start. The cookbook is original, not vendored.
