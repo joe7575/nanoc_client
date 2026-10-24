@@ -80,17 +80,26 @@ Open the matching source file locally and add a `launch.json` configuration:
 
 ```json
 {
-  "type": "nanoc",
-  "request": "attach",
-  "name": "NanoC",
-  "host": "127.0.0.1",
-  "port": 41100,
-  "token": "<TOKEN from the controller>",
-  "source": "${file}",
-  "program": "${file}",
-  "upload": true
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "nanoc",
+      "request": "attach",
+      "name": "NanoC",
+      "host": "127.0.0.1",
+      "port": 41100,
+      "token": "<TOKEN from the controller>",
+      "source": "${file}",
+      "program": "${file}",
+      "upload": true
+    }
+  ]
 }
 ```
+
+`launch.json` must contain the `version`/`configurations` wrapper; a bare
+configuration object is not a valid launch file and VS Code falls back to a
+plaintext default (which a TLS bridge rejects with "Connection reset").
 
 If the bridge uses TLS (`nanoc_bridge_tls`), add the TLS settings to the same
 configuration. Either trust the server certificate:
