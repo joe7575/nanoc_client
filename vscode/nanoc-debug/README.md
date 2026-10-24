@@ -51,6 +51,12 @@ uploads + compiles) the file you are looking at. Without `upload`, F5 only
 attaches and the controller keeps whatever program it had. Breakpoints are
 re-applied automatically after the upload.
 
+**Downloading the controller's current program requires an attach without
+`upload`.** With `"upload": true`, F5 replaces the controller program with the
+active file *before* attaching; if that file is empty or new, the download
+afterwards returns 0 bytes. Use a separate download-only configuration (only
+`type`/`request`/`name`/`host`/`port`/`token`).
+
 Start it with F5. Breakpoints, stepping, the call stack and the Globals/Locals
 variables view are available.
 
@@ -72,7 +78,8 @@ While a debug session is active:
 - **NanoC: Upload Program to Controller** (Ctrl+Alt+U) sends the active editor
   to the controller and recompiles it (breakpoints are re-applied automatically).
 - **NanoC: Download Program from Controller** opens the controller's current
-  program in a new editor tab.
+  program in a new editor tab (attach without `upload`, otherwise the program
+  has just been replaced by the active file).
 
 Typical loop: attach (F5) → download → edit/save → upload (Ctrl+Alt+U) →
 Continue (F5) → debug.

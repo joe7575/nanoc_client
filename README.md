@@ -90,6 +90,12 @@ Open the matching source file locally and add a `launch.json` configuration:
 }
 ```
 
+With `"upload": true`, F5 uploads the active file (and recompiles) before
+attaching. For a **download-only** session omit `upload` (and `program`):
+otherwise the controller program is replaced by the active file first, and
+"NanoC: Download Program from Controller" returns that file (or 0 bytes if it
+is empty).
+
 Start with F5: breakpoints, stepping, call stack and Globals/Locals all work.
 Program output (`printf`) is shown in the dedicated **NanoC terminal** — open it
 with **NanoC: Open Terminal (nanoc-tui)** (Ctrl+Alt+T) or run `nanoc-tui`
