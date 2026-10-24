@@ -75,8 +75,9 @@ in multiple slots; count them to get the required amount.
 ## Recipe adapter (ta4_recipe_adapter)
 
 Read-only recipe source for machines whose recipes are not in a recipe block
-(furnace, electronic fab). Configure the type and the machine node number in
-its formspec.
+(furnace, electronic fab). It is a flat plate like the forceload tile: place it
+on top of the machine and it detects the type and node number automatically
+(no formspec; right-click re-detects).
 
 | Topic | Kind | Payload | Meaning |
 |---|---|---|---|
