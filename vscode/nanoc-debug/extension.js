@@ -177,6 +177,9 @@ function openTerminal() {
   ];
   if (cfg.tls) args.push('--tls');
   if (cfg.serverHostname) args.push('--server-hostname', String(cfg.serverHostname));
+  if (cfg.cafile) args.push('--cafile', String(cfg.cafile));
+  if (cfg.tlsInsecure) args.push('--tls-insecure');
+  if (cfg.tlsFingerprint) args.push('--tls-fingerprint', String(cfg.tlsFingerprint));
   const term = vscode.window.createTerminal({
     name: 'NanoC',
     shellPath: resolveTui(),

@@ -2,7 +2,7 @@
   "name": "nanoc-debug",
   "displayName": "NanoC Debugger",
   "description": "Debug NanoC controllers (in Luanti/Minetest) via the nanoc-dap adapter.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "joe7575",
   "license": "AGPL-3.0-or-later",
   "engines": {
@@ -109,7 +109,12 @@
               "source": { "type": "string", "description": "Path to the matching .nanoc source file (used for stack traces)" },
               "program": { "type": "string", "description": "Path to the .nanoc file to upload on start (use ${file})" },
               "upload": { "type": "boolean", "default": false, "description": "Upload 'program' before starting" },
-              "terminalInConsole": { "type": "boolean", "default": false, "description": "Also mirror program output into the Debug Console (normally use the NanoC terminal instead)" }
+              "terminalInConsole": { "type": "boolean", "default": false, "description": "Also mirror program output into the Debug Console (normally use the NanoC terminal instead)" },
+              "tls": { "type": "boolean", "default": false, "description": "Use TLS for the bridge" },
+              "serverHostname": { "type": "string", "description": "TLS SNI/hostname (defaults to host)" },
+              "cafile": { "type": "string", "description": "CA/certificate file for TLS verification" },
+              "tlsInsecure": { "type": "boolean", "default": false, "description": "Disable TLS certificate verification (testing only)" },
+              "tlsFingerprint": { "type": "string", "description": "Expected SHA-256 fingerprint of the server certificate" }
             }
           },
           "launch": {
@@ -121,7 +126,12 @@
               "source": { "type": "string" },
               "program": { "type": "string" },
               "upload": { "type": "boolean", "default": false },
-              "terminalInConsole": { "type": "boolean", "default": false, "description": "Also mirror program output into the Debug Console" }
+              "terminalInConsole": { "type": "boolean", "default": false, "description": "Also mirror program output into the Debug Console" },
+              "tls": { "type": "boolean", "default": false, "description": "Use TLS for the bridge" },
+              "serverHostname": { "type": "string", "description": "TLS SNI/hostname (defaults to host)" },
+              "cafile": { "type": "string", "description": "CA/certificate file for TLS verification" },
+              "tlsInsecure": { "type": "boolean", "default": false, "description": "Disable TLS certificate verification (testing only)" },
+              "tlsFingerprint": { "type": "string", "description": "Expected SHA-256 fingerprint of the server certificate" }
             }
           }
         },

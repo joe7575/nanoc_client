@@ -32,12 +32,20 @@ def _add_conn(ap):
     ap.add_argument("--token", default="")
     ap.add_argument("--tls", action="store_true")
     ap.add_argument("--server-hostname", default=None)
+    ap.add_argument("--cafile", default=None,
+                    help="CA/certificate file for TLS verification")
+    ap.add_argument("--tls-insecure", action="store_true",
+                    help="TLS without certificate verification (testing only)")
+    ap.add_argument("--tls-fingerprint", default=None,
+                    help="expected SHA-256 fingerprint of the server certificate")
 
 
 def _connect(args):
     client = NanocClient(
         host=args.host, port=args.port, token=args.token,
-        tls=args.tls, server_hostname=args.server_hostname, blocking=False,
+        tls=args.tls, server_hostname=args.server_hostname,
+        cafile=args.cafile, tls_insecure=args.tls_insecure,
+        tls_fingerprint=args.tls_fingerprint, blocking=False,
     )
     client.connect()
     return client
@@ -242,6 +250,12 @@ def cmd_tui(args):
         argv.append("--tls")
     if args.server_hostname:
         argv += ["--server-hostname", args.server_hostname]
+    if args.cafile:
+        argv += ["--cafile", args.cafile]
+    if args.tls_insecure:
+        argv.append("--tls-insecure")
+    if args.tls_fingerprint:
+        argv += ["--tls-fingerprint", args.tls_fingerprint]
     return tui_main(argv)
 
 

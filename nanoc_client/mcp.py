@@ -27,6 +27,8 @@ _INT = {"type": "integer"}
 _NUM = {"type": "number"}
 _CONN = {
     "host": _STR, "port": _INT, "token": _STR, "tls": {"type": "boolean"},
+    "cafile": _STR, "tlsInsecure": {"type": "boolean"},
+    "tlsFingerprint": _STR,
 }
 
 TOOLS = [
@@ -216,11 +218,15 @@ class McpError(Exception):
 
 
 class McpServer:
-    def __init__(self, host, port, token, tls):
+    def __init__(self, host, port, token, tls, cafile=None,
+                 tls_insecure=False, tls_fingerprint=None):
         self.host = host
         self.port = port
         self.token = token
         self.tls = tls
+        self.cafile = cafile
+        self.tls_insecure = tls_insecure
+        self.tls_fingerprint = tls_fingerprint
 
     # -- io ----------------------------------------------------------------
     def reply(self, mid, result):
@@ -307,6 +313,9 @@ class McpServer:
             token=args.get("token", self.token),
             tls=bool(args.get("tls", self.tls)),
             server_hostname=None,
+            cafile=args.get("cafile", self.cafile),
+            tls_insecure=bool(args.get("tlsInsecure", self.tls_insecure)),
+            tls_fingerprint=args.get("tlsFingerprint", self.tls_fingerprint),
         )
 
     @staticmethod
@@ -434,8 +443,15 @@ def main(argv=None):
     ap.add_argument("--token", default=os.environ.get("NANOC_TOKEN", ""))
     ap.add_argument("--tls", action="store_true",
                     default=os.environ.get("NANOC_TLS", "") not in ("", "0", "false"))
+    ap.add_argument("--cafile", default=os.environ.get("NANOC_CAFILE") or None)
+    ap.add_argument("--tls-insecure", action="store_true",
+                    default=os.environ.get("NANOC_TLS_INSECURE", "") not in ("", "0", "false"))
+    ap.add_argument("--tls-fingerprint",
+                    default=os.environ.get("NANOC_TLS_FINGERPRINT") or None)
     args = ap.parse_args(argv)
-    McpServer(args.host, args.port, args.token, args.tls).run()
+    McpServer(args.host, args.port, args.token, args.tls, cafile=args.cafile,
+              tls_insecure=args.tls_insecure,
+              tls_fingerprint=args.tls_fingerprint).run()
     return 0
 
 

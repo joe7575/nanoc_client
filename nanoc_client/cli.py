@@ -1,4 +1,4 @@
-"""Interactive CLI for the NanoC client (protocol version 1).
+"""Interactive CLI for the NanoC client (protocol version 2).
 
 A reader thread prints terminal output and debugger events as they arrive;
 the main loop reads commands from stdin and sends requests. A curses TUI can
@@ -203,6 +203,12 @@ def parse_args(argv=None):
     ap.add_argument("--token", default="")
     ap.add_argument("--tls", action="store_true", help="use TLS")
     ap.add_argument("--server-hostname", default=None, help="SNI/hostname for TLS")
+    ap.add_argument("--cafile", default=None,
+                    help="CA/certificate file for TLS verification")
+    ap.add_argument("--tls-insecure", action="store_true",
+                    help="TLS without certificate verification (testing only)")
+    ap.add_argument("--tls-fingerprint", default=None,
+                    help="expected SHA-256 fingerprint of the server certificate")
     ap.add_argument("--no-terminal", action="store_true", help="do not print terminal output")
     return ap.parse_args(argv)
 
@@ -212,7 +218,9 @@ def main(argv=None) -> int:
     try:
         client = NanocClient(
             host=args.host, port=args.port, token=args.token, tls=args.tls,
-            server_hostname=args.server_hostname,
+            server_hostname=args.server_hostname, cafile=args.cafile,
+            tls_insecure=args.tls_insecure,
+            tls_fingerprint=args.tls_fingerprint,
         )
         client.connect()
     except (NanocError, OSError) as err:

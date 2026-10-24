@@ -162,6 +162,10 @@ class DapServer:
             port=int(args.get("port", 41100)),
             token=args.get("token", ""),
             tls=bool(args.get("tls", False)),
+            server_hostname=args.get("serverHostname") or None,
+            cafile=args.get("cafile") or None,
+            tls_insecure=bool(args.get("tlsInsecure", False)),
+            tls_fingerprint=args.get("tlsFingerprint") or None,
         )
         self.client.connect()
         self._terminal_in_console = bool(args.get("terminalInConsole", False))

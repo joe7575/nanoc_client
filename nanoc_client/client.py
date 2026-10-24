@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import socket
 import ssl
 from typing import Optional
@@ -24,6 +25,9 @@ class NanocClient:
         token: str = "",
         tls: bool = False,
         server_hostname: Optional[str] = None,
+        cafile: Optional[str] = None,
+        tls_insecure: bool = False,
+        tls_fingerprint: Optional[str] = None,
         timeout: float = 10.0,
         blocking: bool = True,
     ):
@@ -32,6 +36,9 @@ class NanocClient:
         self.token = token
         self.tls = tls
         self.server_hostname = server_hostname or host
+        self.cafile = cafile
+        self.tls_insecure = tls_insecure
+        self.tls_fingerprint = tls_fingerprint
         self.timeout = timeout
         self.blocking = blocking
         self.session = 0
@@ -42,8 +49,22 @@ class NanocClient:
     def connect(self) -> None:
         raw = socket.create_connection((self.host, self.port), self.timeout)
         if self.tls:
-            ctx = ssl.create_default_context()
+            if self.tls_insecure or self.tls_fingerprint:
+                ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+                ctx.check_hostname = False
+                ctx.verify_mode = ssl.CERT_NONE
+            else:
+                ctx = ssl.create_default_context(cafile=self.cafile)
             raw = ctx.wrap_socket(raw, server_hostname=self.server_hostname)
+            if self.tls_fingerprint:
+                cert = raw.getpeercert(binary_form=True)
+                got = hashlib.sha256(cert).hexdigest()
+                want = self.tls_fingerprint.replace(":", "").lower()
+                if got != want:
+                    raw.close()
+                    raise NanocError(
+                        "TLS certificate fingerprint mismatch: "
+                        f"got {got}, expected {want}")
         raw.settimeout(self.timeout)
         self._sock = raw
         self._handshake()

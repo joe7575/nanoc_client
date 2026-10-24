@@ -104,11 +104,13 @@ feeding the machine, otherwise only one of the duplicates is produced.
 | Topic | Kind | Payload | Meaning |
 |---|---|---|---|
 | 1 | send | `[0\|1]` | stop / start |
+| 11 | send | - | move leftover `src` items to `dst` (refused while running; returns 1/0) |
 | 129 | request | - | 1 running, 2 blocked, 3 standby, 4 no power, 5 fault, 6 stopped |
 | 141 | request | - | configured output name (`nvm.output`), **not** the `dst` contents |
 
 Inputs go into `src` (2x2). A pusher can only pull from `dst`; leftover `src`
-items stay until a matching recipe consumes them (there is no remote flush).
+items stay until a matching recipe consumes them. Use topic 11 to move them to
+`dst` (like the autocrafter flush) and then remove them with a pusher.
 Push the ingredients first, then select the output via the adapter (topic 64),
 then start.
 

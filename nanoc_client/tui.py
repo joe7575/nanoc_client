@@ -94,6 +94,8 @@ class Tui:
         self.client = NanocClient(
             host=self.args.host, port=self.args.port, token=self.args.token,
             tls=self.args.tls, server_hostname=self.args.server_hostname,
+            cafile=self.args.cafile, tls_insecure=self.args.tls_insecure,
+            tls_fingerprint=self.args.tls_fingerprint,
             blocking=False, timeout=0.2,
         )
         self.client.connect()
@@ -272,6 +274,9 @@ def main(argv=None) -> int:
     ap.add_argument("--token", default="")
     ap.add_argument("--tls", action="store_true")
     ap.add_argument("--server-hostname", default=None)
+    ap.add_argument("--cafile", default=None)
+    ap.add_argument("--tls-insecure", action="store_true")
+    ap.add_argument("--tls-fingerprint", default=None)
     args = ap.parse_args(argv)
 
     if curses is None:

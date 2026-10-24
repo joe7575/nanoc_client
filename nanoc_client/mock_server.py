@@ -1,4 +1,4 @@
-"""Mock NanoC server for testing the client (protocol version 1).
+"""Mock NanoC server for testing the client (protocol version 2).
 
 Speaks the same TCP wire protocol as the Luanti-side bridge will
 (see nanoc_lib/doc/protocol.md), but simulates a tiny VM: a counter that
@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import socket
+import ssl
 import threading
 import time
 
@@ -27,11 +28,15 @@ def _ascii_to_words(s):
 
 
 class MockServer:
-    def __init__(self, host="127.0.0.1", port=40000, token="secret", deny_attach=False):
+    def __init__(self, host="127.0.0.1", port=40000, token="secret", deny_attach=False,
+                 tls=False, certfile=None, keyfile=None):
         self.host = host
         self.port = port
         self.token = token
         self.deny_attach = deny_attach
+        self.tls = tls
+        self.certfile = certfile
+        self.keyfile = keyfile
         self._sock = None
         self._conn = None
         self._running = False
@@ -57,9 +62,20 @@ class MockServer:
         self._sock.listen(1)
         print(f"[mock] listening on {self.host}:{self.port} (token={self.token!r})")
         self._running = True
+        ctx = None
+        if self.tls:
+            ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            ctx.load_cert_chain(self.certfile, self.keyfile)
         while self._running:
             conn, addr = self._sock.accept()
             print(f"[mock] client {addr}")
+            try:
+                if ctx is not None:
+                    conn = ctx.wrap_socket(conn, server_side=True)
+            except (ssl.SSLError, OSError) as err:
+                print(f"[mock] TLS handshake failed: {err}")
+                conn.close()
+                continue
             self._conn = conn
             try:
                 self._handle(conn)
