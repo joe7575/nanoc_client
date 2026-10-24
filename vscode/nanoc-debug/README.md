@@ -46,6 +46,22 @@ Open the same `.nanoc` source file locally that is compiled on the controller
 }
 ```
 
+If the bridge uses TLS (`nanoc_bridge_tls`), add the TLS settings to the same
+configuration. Either trust the server certificate:
+
+```json
+  "tls": true,
+  "cafile": "/home/joachim/luanti-5.11.0/nanoc-tls/cert.pem"
+```
+
+or pin its SHA-256 fingerprint (`"tlsFingerprint": "<hex>"`), or disable
+verification for testing (`"tlsInsecure": true`). `"serverHostname"` overrides
+the name used for certificate verification (default: `host`). Without `tls`
+the adapter connects in plaintext and a TLS bridge resets the connection.
+
+After updating the extension, rebuild and reinstall the VSIX (0.4.1) so the new
+launch properties and the TUI terminal arguments are available.
+
 `${file}` is the active editor, so F5 always uses (and, with `"upload": true`,
 uploads + compiles) the file you are looking at. Without `upload`, F5 only
 attaches and the controller keeps whatever program it had. Breakpoints are
