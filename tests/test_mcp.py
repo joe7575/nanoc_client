@@ -68,6 +68,20 @@ class TestMcpServer(unittest.TestCase):
         self.assertIn("nanoc_catalog", names)
         self.assertIn("nanoc_exec", names)
 
+    def test_resources(self):
+        r = self._call(1, "initialize", {"protocolVersion": "2024-11-05"})
+        self.assertIn("resources", r["result"]["capabilities"])
+        r = self._call(2, "resources/list")
+        uris = [res["uri"] for res in r["result"]["resources"]]
+        self.assertIn("nanoc://workflow", uris)
+        self.assertIn("nanoc://language", uris)
+        self.assertIn("nanoc://topics", uris)
+        r = self._call(3, "resources/read", {"uri": "nanoc://workflow"})
+        text = r["result"]["contents"][0]["text"]
+        self.assertIn("nanoc_scan", text)
+        r = self._call(4, "resources/read", {"uri": "nanoc://nope"})
+        self.assertIn("error", r)
+
     def test_catalog_tool(self):
         self._call(1, "initialize", {"protocolVersion": "2024-11-05"})
         r = self._call(2, "tools/call",

@@ -88,6 +88,90 @@ TOOLS = [
 ]
 
 
+_DOCS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs")
+
+# Documentation served to AI clients as MCP resources. Files are vendored into
+# the package (see docs/README.md and tools/sync_docs.py).
+RESOURCES = [
+    {
+        "uri": "nanoc://workflow",
+        "name": "NanoC workflow",
+        "description": "How to drive a NanoC controller over these tools: "
+                       "scan, catalog, write, check, exec.",
+        "mimeType": "text/markdown",
+        "file": "workflow.md",
+    },
+    {
+        "uri": "nanoc://language",
+        "name": "NanoC language primer",
+        "description": "Syntax rules and examples for writing NanoC programs.",
+        "mimeType": "text/markdown",
+        "file": "language.md",
+    },
+    {
+        "uri": "nanoc://reference",
+        "name": "NanoC language reference",
+        "description": "Full language reference (types, operators, control "
+                       "flow, arrays, builtins).",
+        "mimeType": "text/markdown",
+        "file": "reference.md",
+    },
+    {
+        "uri": "nanoc://manual",
+        "name": "NanoC manual",
+        "description": "Player manual: components, language examples, timing, "
+                       "Techage integration, persistence.",
+        "mimeType": "text/markdown",
+        "file": "manual.md",
+    },
+    {
+        "uri": "nanoc://topics",
+        "name": "Techage topic reference",
+        "description": "BEP 005: techage command topics, payloads and node "
+                       "name patterns.",
+        "mimeType": "text/markdown",
+        "file": "techage_topics.md",
+    },
+    {
+        "uri": "nanoc://examples/techage_monitor",
+        "name": "Example: techage monitor",
+        "description": "Monitor input chests, output chest and autocrafter "
+                       "state, with terminal alarms.",
+        "mimeType": "text/plain",
+        "file": "examples/techage_monitor.nanoc",
+    },
+    {
+        "uri": "nanoc://examples/termlib_demo",
+        "name": "Example: termlib demo",
+        "description": "Terminal output, colours and keyboard input.",
+        "mimeType": "text/plain",
+        "file": "examples/termlib_demo.nanoc",
+    },
+]
+
+
+def _resource_available(res):
+    return os.path.isfile(os.path.join(_DOCS, res["file"]))
+
+
+def _resource_entry(res):
+    return {key: res[key] for key in ("uri", "name", "description", "mimeType")}
+
+
+def _read_resource(uri):
+    for res in RESOURCES:
+        if res["uri"] != uri:
+            continue
+        path = os.path.join(_DOCS, res["file"])
+        if not os.path.isfile(path):
+            raise McpError(-32603, "resource file missing: " + res["file"])
+        with open(path, "r", encoding="utf-8") as f:
+            text = f.read()
+        return {"contents": [{"uri": uri, "mimeType": res["mimeType"],
+                              "text": text}]}
+    raise McpError(-32602, "unknown resource: " + str(uri))
+
+
 class McpError(Exception):
     def __init__(self, code, message):
         super().__init__(message)
@@ -138,7 +222,7 @@ class McpServer:
                 params = msg.get("params") or {}
                 self.reply(mid, {
                     "protocolVersion": params.get("protocolVersion", PROTOCOL_VERSION),
-                    "capabilities": {"tools": {}},
+                    "capabilities": {"tools": {}, "resources": {}},
                     "serverInfo": {"name": "nanoc", "version": "0.1.0"},
                 })
             elif method == "ping":
@@ -148,7 +232,14 @@ class McpServer:
             elif method == "tools/call":
                 self.reply(mid, self._call_tool(msg.get("params") or {}))
             elif method == "resources/list":
-                self.reply(mid, {"resources": []})
+                self.reply(mid, {"resources": [
+                    _resource_entry(res) for res in RESOURCES
+                    if _resource_available(res)]})
+            elif method == "resources/templates/list":
+                self.reply(mid, {"resourceTemplates": []})
+            elif method == "resources/read":
+                params = msg.get("params") or {}
+                self.reply(mid, _read_resource(params.get("uri")))
             elif method == "prompts/list":
                 self.reply(mid, {"prompts": []})
             else:
@@ -190,6 +281,16 @@ class McpServer:
             with open(args["file"], "r", encoding="utf-8") as f:
                 return f.read()
         raise McpError(-32602, "either 'text' or 'file' is required")
+
+    @staticmethod
+    def _format_output(collect, logs):
+        text = b"".join(collect).decode("utf-8", "replace")
+        if logs and text and not text.endswith("\n"):
+            text += "\n"
+        for line in logs:
+            msg = line.decode("utf-8", "replace").rstrip("\n")
+            text += "[log] " + msg + "\n"
+        return text
 
     # -- tools -------------------------------------------------------------
     def _tool_nanoc_scan(self, args):
@@ -264,9 +365,10 @@ class McpServer:
     def _tool_nanoc_read(self, args):
         client = _connect(self._conn(args))
         collect = []
+        logs = []
         try:
-            _read_seconds(client, float(args.get("seconds", 3.0)), collect)
-            return b"".join(collect).decode("utf-8", "replace")
+            _read_seconds(client, float(args.get("seconds", 3.0)), collect, logs)
+            return self._format_output(collect, logs)
         finally:
             client.close()
 
@@ -274,6 +376,7 @@ class McpServer:
         data = self._text(args).encode("utf-8")
         client = _connect(self._conn(args))
         collect = []
+        logs = []
         try:
             if not _claim(client):
                 raise McpError(-32603, "controller is busy")
@@ -281,8 +384,8 @@ class McpServer:
             if not ok:
                 return "compile failed:\n" + msg
             _cmd(client, p.Command.CONTINUE)
-            _read_seconds(client, float(args.get("seconds", 3.0)), collect)
-            return b"".join(collect).decode("utf-8", "replace")
+            _read_seconds(client, float(args.get("seconds", 3.0)), collect, logs)
+            return self._format_output(collect, logs)
         finally:
             client.close()
 

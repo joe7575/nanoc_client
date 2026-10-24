@@ -84,7 +84,7 @@ def _claim(client):
     return True
 
 
-def _read_seconds(client, seconds, collect):
+def _read_seconds(client, seconds, collect, logs=None):
     end = time.time() + seconds
     while time.time() < end:
         try:
@@ -95,6 +95,8 @@ def _read_seconds(client, seconds, collect):
             break
         if channel is p.Channel.TERMINAL:
             collect.append(payload)
+        elif logs is not None and channel is p.Channel.LOG:
+            logs.append(payload)
 
 
 def _upload_bytes(client, data, timeout=10.0):

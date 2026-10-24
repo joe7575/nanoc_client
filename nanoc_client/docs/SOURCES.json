@@ -1,0 +1,40 @@
+{
+  "beduino": {
+    "commit": "d6ba8288ec7ce983ebf5968bec865162e2a29654",
+    "dirty": false
+  },
+  "files": {
+    "examples/techage_monitor.nanoc": {
+      "file": "examples/techage_monitor.nanoc",
+      "root": "nanoc_mod"
+    },
+    "examples/termlib_demo.nanoc": {
+      "file": "examples/termlib_demo.nanoc",
+      "root": "nanoc_mod"
+    },
+    "language.md": {
+      "file": "nanoc_llm_prompt.md",
+      "root": "nanoc_docs"
+    },
+    "manual.md": {
+      "file": "doc/manual.md",
+      "root": "nanoc_mod"
+    },
+    "reference.md": {
+      "file": "nanoc_reference.md",
+      "root": "nanoc_docs"
+    },
+    "techage_topics.md": {
+      "file": "BEPs/bep-005_ta_cmnd.md",
+      "root": "beduino"
+    }
+  },
+  "nanoc_docs": {
+    "commit": "8aa60b83bf1e00e9e308d5adacaac460f3d6d83e",
+    "dirty": true
+  },
+  "nanoc_mod": {
+    "commit": "5b7fe0880f5c6044a832a274c221bf8ba4f633c2",
+    "dirty": false
+  }
+}

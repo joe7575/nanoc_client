@@ -168,6 +168,37 @@ OpenCode (`opencode.json`, adjust to your version):
 Typical AI loop: `nanoc_scan` → reason about the graph → `nanoc_exec`
 (push+run+read) → refine.
 
+### MCP resources (documentation for the AI)
+
+The server also publishes documentation as MCP resources, so a client knows
+NanoC and Techage without prior training:
+
+| URI | Content |
+|---|---|
+| `nanoc://workflow` | How to drive the controller (scan → catalog → check → exec) |
+| `nanoc://language` | NanoC code-generation primer |
+| `nanoc://reference` | Full language reference |
+| `nanoc://manual` | Player manual (language, Techage, timing) |
+| `nanoc://topics` | BEP 005 topic table (payloads, node patterns) |
+| `nanoc://examples/techage_monitor` | Monitoring example |
+| `nanoc://examples/termlib_demo` | Terminal/keyboard example |
+
+The files are vendored in `nanoc_client/docs/`; refresh them from the sibling
+repositories with `python tools/sync_docs.py` (see `docs/README.md`).
+
+### OpenCode skill
+
+`skill/nanoc/SKILL.md` bundles the workflow for opencode (when to use the
+tools, which resources to read first, the common pitfalls). Install it once:
+
+```bash
+mkdir -p ~/.config/opencode/skills
+ln -sfn "$PWD/skill/nanoc" ~/.config/opencode/skills/nanoc
+```
+
+Restart opencode after changing the MCP config or the skill; both are loaded
+at startup only.
+
 ## Focus
 
 Only one client may debug a controller at a time. The first `attach` owns it;

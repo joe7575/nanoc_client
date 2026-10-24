@@ -29,3 +29,6 @@ windows = ["windows-curses>=2.3"]
 
 [tool.setuptools.packages.find]
 include = ["nanoc_client*"]
+
+[tool.setuptools.package-data]
+nanoc_client = ["docs/*.md", "docs/*.json", "docs/examples/*.nanoc"]

@@ -1,0 +1,80 @@
+// NanoC example: monitor a TA4 autocrafter setup
+//
+// Supply two input chests via two pushers into an autocrafter, push the
+// result into an output chest. Raise text alarms on the terminal when:
+//   1) an input chest runs empty
+//   2) the output chest runs full
+//   3) the autocrafter is blocked or in fault state
+//
+// NanoC has 32-bit variables, so you address the techage node numbers
+// directly (no io_module/port mapping needed). Set them below to the numbers
+// of your blocks (shown in the block's infotext).
+//
+//   chest_a / chest_b : input chests      (e.g. 4, 5)
+//   out_chest         : output chest      (e.g. 8)
+//   crafter           : autocrafter       (e.g. 6)
+//
+// Techage calls (synchronous):
+//   ta_req_data(number, topic, payload)   -> numeric result
+//   ta_send_cmd(number, topic, payload)   -> status (0 = ok)
+//   payload is an int32[] array for numeric topics, or a string for the
+//   Beduino string topics (>= 192 for requests, >= 64 for commands).
+// Topic values (BEP 005):
+//   chest state  (131): 0 = empty, 1 = loaded, 2 = full
+//   machine state(129): 1 run, 2 blocked, 3 standby, 5 fault,
+//                       6 stopped, 7 unloaded
+
+const SIGNAL = 12
+int32 chest_a = 4
+int32 chest_b = 5
+int32 out_chest = 8
+int32 crafter = 6
+int32 tmp = 0
+
+int32 noarg[0]      // empty payload for simple requests
+int32 col[0]        // signal tower color
+
+int32 cycle = 0
+
+func int32 blinky(int32 cnt) {
+    if(cnt mod 2 == 0) {
+        return 1
+    }
+    return 0
+}
+
+printf("\27\1") // Clearscreen
+
+while (1) {
+    int32 a = ta_req_data(chest_a, 131, noarg)
+    int32 b = ta_req_data(chest_b, 131, noarg)
+    int32 o = ta_req_data(out_chest, 131, noarg)
+    int32 c = ta_req_data(crafter, 129, noarg)
+
+    if (a == 0) {
+        printf("ALARM: input chest A empty!\n")
+    }
+    if (b == 0) {
+        printf("ALARM: input chest B empty!\n")
+    }
+    if (o == 2) {
+        printf("ALARM: output chest full!\n")
+    }
+    if (c == 5) {
+        printf("ALARM: autocrafter FAULT (wrong items?)\n")
+    }
+    if (c == 2) {
+        printf("ALARM: autocrafter BLOCKED\n")
+    }
+
+    cycle = cycle + 1
+    col[0] = blinky(cycle)
+    int32 st = ta_send_cmd(SIGNAL, 2, col)
+    printf("Lampe = %d\n", st)
+
+    if ((cycle % 10) == 0) {
+        log("monitor alive, cycle " + str$(cycle) + "\n")
+    }
+
+    sleep(1000)
+}
