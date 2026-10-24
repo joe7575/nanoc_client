@@ -75,10 +75,10 @@ in multiple slots; count them to get the required amount.
 ## Recipe adapter (ta4_recipe_adapter)
 
 Read-only recipe source for machines whose recipes are not in a recipe block
-(furnace, electronic fab). It is a flat plate like the forceload tile and can
-be mounted on any face of the machine; it detects the machine on its back side
-(the same direction logic as the Beduino IOT sensor port 0), without a
-formspec. Right-click re-detects.
+(furnace, electronic fab). It uses the Beduino IOT sensor's size, textures and
+wall/floor/ceiling variants; mount it on any face of the machine. It detects
+the machine on its back side (the same direction logic as the IOT sensor
+port 0), without a formspec. Right-click re-detects.
 
 | Topic | Kind | Payload | Meaning |
 |---|---|---|---|
