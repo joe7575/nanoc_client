@@ -1,7 +1,7 @@
 {
   "beduino": {
     "commit": "8816038c17755ce4dc99d1f2a2806cff0c349539",
-    "dirty": false
+    "dirty": true
   },
   "files": {
     "examples/factory_control.nanoc": {
@@ -34,11 +34,11 @@
     }
   },
   "nanoc_docs": {
-    "commit": "abe066c4dffad15ab54e15d6cd47ab7acadffd57",
-    "dirty": true
+    "commit": "7367b05470be14c3fbde2789818b3bdc606e955c",
+    "dirty": false
   },
   "nanoc_mod": {
-    "commit": "6d0a0fcba0bb3289dc7a4ea350c29586cfa68767",
+    "commit": "4e28a247f2e4528f017d76418ce9f461d1daf761",
     "dirty": true
   }
 }

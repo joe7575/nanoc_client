@@ -72,6 +72,25 @@ in multiple slots; count them to get the required amount.
 | 2 | send | `[0\|1\|2\|3]` | off / green / amber / red |
 | 130 | request | - | current colour |
 
+## Recipe adapter (ta4_recipe_adapter)
+
+Read-only recipe source for machines whose recipes are not in a recipe block
+(furnace, electronic fab). Configure the type and the machine node number in
+its formspec.
+
+| Topic | Kind | Payload | Meaning |
+|---|---|---|---|
+| 64 | send | `"idx"` | select recipe on the target (electronic fab) |
+| 156 | request | - | number of recipes |
+| 158 | request | `[idx]` | output count |
+| 160 | request | - | target machine node number |
+| 193 | request | `"idx"` | output item name |
+| 194 | request | `"idx,slot"` | input item name |
+| 195 | request | `"name"` | recipe index for an output name (0 = not found) |
+| 196 | request | `[idx]` | furnace recipe time; 0 for the fab |
+| 197 | request | `[idx,slot]` | input count |
+| 198 | request | `[idx]` | number of inputs |
+
 ## NanoC notes for plant programs
 
 - `for i = 1 to 0` executes the body **once** (do-while); guard descending
