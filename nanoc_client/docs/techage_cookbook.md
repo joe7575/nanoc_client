@@ -128,10 +128,10 @@ up and the fab stops.
 
 ## NanoC notes for plant programs
 
-- `ta_send_cmd` and `ta_req_data(_s)` return a value, so a **bare call as a
-  statement is a syntax error**. Assign the status (`g_rc = ta_send_cmd(...)`)
-  or use the result in an expression. `sleep()` and `log()` return nothing and
-  may stand alone.
+- `ta_send_cmd`/`ta_req_data(_s)` may be used as plain statements; their result
+  is discarded. Assign it (`g_rc = ta_send_cmd(...)`) if you need the status.
+  This needs **nanoclib >= 0.2.5**; older cores reject bare value-returning
+  calls. `sleep()` and `log()` return nothing and always worked as statements.
 - Recipe data lists duplicate inputs as separate slots. Sum the counts per item
   name before checking stock or feeding a machine (bronze: 3x copper + 1x tin).
 - `for i = 1 to 0` executes the body **once** (do-while); guard descending

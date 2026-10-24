@@ -74,9 +74,9 @@ normally do not have these. Use the GitHub repositories:
   read-only. Use global `str8` variables for mutable strings.
 - No structs, no 2-D arrays, no floats; a single array block is max 127 words
   (512 bytes). The call stack is 128 words; deep recursion overflows.
-- `ta_send_cmd`/`ta_req_data(_s)` return a value, so use them in an assignment
-  (`g_rc = ta_send_cmd(...)`). A bare call as a statement is a syntax error;
-  void functions like `sleep()`/`log()` are fine.
+- `ta_send_cmd`/`ta_req_data(_s)` can be used as plain statements (result
+  discarded) on **nanoclib >= 0.2.5**. Assign it (`g_rc = ta_send_cmd(...)`)
+  when you need the status; older cores reject bare value-returning calls.
 - Recipe lists repeat duplicate inputs as separate slots; sum them per item
   name before checking stock or feeding a machine.
 
