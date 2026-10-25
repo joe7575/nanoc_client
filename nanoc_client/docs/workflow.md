@@ -82,9 +82,11 @@ Node states from topic `129`: 1 running, 2 blocked, 3 standby, 4 no power,
 
 Nodes without a techage number use their position string as `id`; only nodes
 with a `number` can be addressed by the program. The scan is limited to TA4
-nodes, TA5 teleport bridges and the given radius (1–32). Teleport bridges
-(`techage:ta5_tele_tube` / `_pipe`) show their wireless pair as an edge with
-`via = "teleport"`.
+nodes, TA5 teleport bridges, Hyperloop chests/tanks and the given radius
+(1–32). Teleport bridges (`techage:ta5_tele_tube` / `_pipe`) show their
+wireless pair as `via = "teleport"`; Hyperloop chests/tanks
+(`techage:ta5_hl_chest` / `_tank`) show their paired block as
+`via = "hyperloop"`.
 
 ## Important behavior and limits
 
