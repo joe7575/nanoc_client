@@ -6,15 +6,22 @@ Minimal VS Code debugger extension that starts the `nanoc-dap` adapter
 
 ## Install
 
-Build and install the VSIX (no `vsce` needed), then restart VS Code:
+Build and install the VSIX (no `vsce` needed), then restart VS Code. From the
+repository root:
 
 ```bash
-~/Projekte/nanoc_client/vscode/build-vsix.sh
-code --install-extension ~/Projekte/nanoc_client/vscode/nanoc-debug.vsix
+python3 vscode/build_vsix.py
+code --install-extension vscode/nanoc-debug.vsix
 ```
 
-(Simply symlinking the folder into `~/.vscode/extensions` is not always picked
-up by VS Code; the VSIX install is reliable.)
+On Windows: `py vscode\build_vsix.py` and
+`code --install-extension vscode\nanoc-debug.vsix`.
+
+The VSIX is **gitignored**, so it is not in the GitHub ZIP. Build it with
+`build_vsix.py` (only Python required) or use a release artifact.
+`build-vsix.sh` is an alternative where Bash and `zip` are available. Symlinking
+the folder into `~/.vscode/extensions` is not always picked up by VS Code; the
+VSIX install is reliable.
 
 The extension looks for the adapter in this order:
 
@@ -29,9 +36,8 @@ On **Windows**, the Linux default path does not exist. Set
 "nanoc.dapPath": "C:\\path\\to\\venv\\Scripts\\nanoc-dap.exe"
 ```
 
-`build-vsix.sh` needs Bash and `zip`; if either is missing, use a prebuilt
-`nanoc-debug.vsix`. Extension 0.4.1 or newer is required for the TLS launch
-properties (`tls`, `cafile`, `tlsFingerprint`).
+Extension 0.4.1 or newer is required for the TLS launch properties
+(`tls`, `cafile`, `tlsFingerprint`).
 
 ## Usage
 

@@ -114,20 +114,26 @@ This repo ships a minimal debugger extension (`vscode/nanoc-debug`) that
 starts the `nanoc-dap` adapter and adds syntax highlighting for `.nanoc`
 files (`.nc` is accepted as an alias).
 
-Install (build a VSIX, no `vsce` needed), then restart VS Code:
+Install (build a VSIX, no `vsce` needed), then restart VS Code. From the
+repository root:
 
 ```bash
-~/Projekte/nanoc_client/vscode/build-vsix.sh
-code --install-extension ~/Projekte/nanoc_client/vscode/nanoc-debug.vsix
+python3 vscode/build_vsix.py
+code --install-extension vscode/nanoc-debug.vsix
 ```
+
+On Windows: `py vscode\build_vsix.py` and
+`code --install-extension vscode\nanoc-debug.vsix`.
 
 On **Windows**, set `"nanoc.dapPath"` in VS Code settings to the adapter in
 your Python environment, e.g.
 `C:\path\to\venv\Scripts\nanoc-dap.exe`; the Linux default path does not
-exist there. `build-vsix.sh` needs Bash and `zip`; if either is missing, use a
-prebuilt `nanoc-debug.vsix`. Extension 0.4.1 or newer is required for the TLS
-launch properties. The VSIX may not be included in the GitHub ZIP; build it or
-copy a prebuilt one.
+exist there.
+
+`build_vsix.py` needs only Python. The VSIX is **gitignored** and therefore
+not included in the GitHub ZIP; build it with the script or use a release
+artifact. `build-vsix.sh` is an alternative where Bash and `zip` are available.
+Extension 0.4.1 or newer is required for the TLS launch properties.
 
 Open the matching source file locally and add a `launch.json` configuration:
 
