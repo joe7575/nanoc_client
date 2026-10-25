@@ -19,8 +19,19 @@ up by VS Code; the VSIX install is reliable.)
 The extension looks for the adapter in this order:
 
 1. `nanoc.dapPath` setting,
-2. `~/.local/venvs/nanoc/bin/nanoc-dap` (the setup default),
+2. `~/.local/venvs/nanoc/bin/nanoc-dap` (the Linux setup default),
 3. `nanoc-dap` on `PATH`.
+
+On **Windows**, the Linux default path does not exist. Set
+`"nanoc.dapPath"` to the adapter in your Python environment, for example:
+
+```json
+"nanoc.dapPath": "C:\\path\\to\\venv\\Scripts\\nanoc-dap.exe"
+```
+
+`build-vsix.sh` needs Bash and `zip`; if either is missing, use a prebuilt
+`nanoc-debug.vsix`. Extension 0.4.1 or newer is required for the TLS launch
+properties (`tls`, `cafile`, `tlsFingerprint`).
 
 ## Usage
 

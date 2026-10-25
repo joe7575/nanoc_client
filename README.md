@@ -121,6 +121,14 @@ Install (build a VSIX, no `vsce` needed), then restart VS Code:
 code --install-extension ~/Projekte/nanoc_client/vscode/nanoc-debug.vsix
 ```
 
+On **Windows**, set `"nanoc.dapPath"` in VS Code settings to the adapter in
+your Python environment, e.g.
+`C:\path\to\venv\Scripts\nanoc-dap.exe`; the Linux default path does not
+exist there. `build-vsix.sh` needs Bash and `zip`; if either is missing, use a
+prebuilt `nanoc-debug.vsix`. Extension 0.4.1 or newer is required for the TLS
+launch properties. The VSIX may not be included in the GitHub ZIP; build it or
+copy a prebuilt one.
+
 Open the matching source file locally and add a `launch.json` configuration:
 
 ```json
