@@ -76,11 +76,15 @@ in multiple slots; count them to get the required amount.
 
 ## Recipe adapter (ta4_recipe_adapter)
 
-Read-only recipe source for machines whose recipes are not in a recipe block
-(furnace, electronic fab). It uses the Beduino IOT sensor's size, textures and
-wall/floor/ceiling variants; mount it on any face of the machine. It detects
-the machine on its back side (the same direction logic as the IOT sensor
-port 0), without a formspec. Right-click re-detects.
+Recipe source for machines that do not expose recipes themselves. It uses the
+Beduino IOT sensor's size, textures and wall/floor/ceiling variants; mount it
+on any face of the machine. It detects the machine on its back side (the same
+direction logic as the IOT sensor port 0), without a formspec. Right-click
+re-detects.
+
+The **TA3 furnace needs it**. The **TA4 electronic fab now has the same topics
+built in** (see below), so it works directly without an adapter. The adapter
+remains useful for fabs of older generations and as a fallback.
 
 | Topic | Kind | Payload | Meaning |
 |---|---|---|---|
@@ -114,17 +118,28 @@ items stay until a matching recipe consumes them. Use topic 11 to move them to
 Push the ingredients first, then select the output via the adapter (topic 64),
 then start.
 
-## Electronic fab (ta4_electronic_fab)
+## Electronic fab (ta2/ta3/ta4_electronic_fab)
 
 | Topic | Kind | Payload | Meaning |
 |---|---|---|---|
 | 1 | send | `[0\|1]` | stop / start |
+| 64 | send | `"idx"` | select recipe *idx* |
 | 129 | request | - | state as above |
+| 156 | request | - | number of recipes |
+| 158 | request | `[idx]` | output count |
+| 160 | request | - | own node number |
+| 161 | request | `[idx]` | 0 (fab recipes have no time) |
+| 162 | request | `[idx,slot]` | input count |
+| 163 | request | `[idx]` | number of input slots (4) |
+| 193 | request | `"idx"` | output item name |
+| 194 | request | `"idx,slot"` | input item name |
+| 195 | request | `"name"` | recipe index for an output name (0 = not found) |
 
-Recipes come from the adapter (topic 64). Output **and waste** are placed in
-`dst`; e.g. chip recipes return `basic_materials:empty_spool`. Pull the product
-with a filtered pusher, but also pull or clear the waste, otherwise `dst` fills
-up and the fab stops.
+The fab selects the recipe with topic 64 and processes it automatically when
+the inputs are in `src`. Output **and waste** are placed in `dst`; e.g. chip
+recipes return `basic_materials:empty_spool`. Pull the product with a filtered
+pusher, but also pull or clear the waste, otherwise `dst` fills up and the fab
+stops.
 
 ## NanoC notes for plant programs
 
