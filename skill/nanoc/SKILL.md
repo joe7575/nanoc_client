@@ -90,7 +90,8 @@ normally do not have these. Use the GitHub repositories:
 - A failed compile leaves the controller stopped.
 - The controller must be in a loaded/forceloaded area, otherwise `NOT_LOADED`.
 - `printf` output comes back from `nanoc_read`/`nanoc_exec`; `log("...")` lines
-  are prefixed `[log]`.
+  are prefixed `[log]`. A new controller with no program shows no output:
+  ping it with `nanoc_catalog` (TLS/token/bridge) or `nanoc_scan` (loaded/plant).
 - In `nanoc_scan`, a pusher's `main` item is its configured filter, not a
   stuck item. The scan covers only the area around the player; for a large
   plant, run it from several positions. Furnace topic 141 is the configured output name, not inventory;

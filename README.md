@@ -206,6 +206,11 @@ controller form), `--tls`, `--cafile`, `--tls-fingerprint`, `--tls-insecure`.
 `nanoc exec` is the one-shot loop for automation: write → exec → read output →
 improve.
 
+A newly placed controller with an empty program produces no terminal output.
+To check TLS/token/bridge without output, use `nanoc catalog` (returns the
+topic catalog) or `nanoc scan --radius 8` (returns the controller/plant if its
+area is loaded). `nanoc read` only shows terminal output.
+
 ## MCP server (`nanoc-mcp`)
 
 Exposes the bridge to AI clients (Claude Desktop, OpenCode, …) as MCP tools:
