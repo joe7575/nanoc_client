@@ -210,7 +210,7 @@ def cmd_exec(args):
 def cmd_scan(args):
     client = _connect(args)
     try:
-        resp = _cmd(client, p.Command.SCAN, args.radius, timeout=20)
+        resp = _cmd(client, p.Command.SCAN, args.radius, timeout=60)
         status = resp[0] if resp else 1
         text = _compiler_message(resp)
         if status != 0 or not text:

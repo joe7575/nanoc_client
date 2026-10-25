@@ -1,7 +1,7 @@
 """NanoC MCP server (Model Context Protocol) over stdio.
 
 Exposes the NanoC bridge to AI clients (Claude Desktop, OpenCode, ...) as MCP
-tools: scan the TA4 techage network, upload/run/stop programs, read terminal
+tools: scan the TA4 network plus TA5 teleport bridges, upload/run/stop programs, read terminal
 output. Connection defaults come from the args or the environment
 (NANOC_HOST, NANOC_PORT, NANOC_TOKEN, NANOC_TLS).
 
@@ -35,7 +35,8 @@ TOOLS = [
     {
         "name": "nanoc_scan",
         "description": "Dump the TA4 techage network around the controller as "
-                       "JSON (nodes with number/state/inventory/caps and edges).",
+                       "JSON (nodes with number/state/inventory/caps and edges); "
+                       "TA5 teleport bridges appear with via='teleport'.",
         "inputSchema": {"type": "object", "properties": {
             "radius": _INT, **_CONN}},
     },
@@ -341,7 +342,7 @@ class McpServer:
     def _tool_nanoc_scan(self, args):
         client = _connect(self._conn(args))
         try:
-            resp = _cmd(client, p.Command.SCAN, int(args.get("radius", 8)), timeout=20)
+            resp = _cmd(client, p.Command.SCAN, int(args.get("radius", 8)), timeout=60)
             status = resp[0] if resp else 1
             text = _compiler_message(resp)
             if status != 0 or not text:
