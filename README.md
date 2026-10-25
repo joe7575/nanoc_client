@@ -125,10 +125,10 @@ code --install-extension vscode/nanoc-debug.vsix
 On Windows: `py vscode\build_vsix.py` and
 `code --install-extension vscode\nanoc-debug.vsix`.
 
-On **Windows**, set `"nanoc.dapPath"` in VS Code settings to the adapter in
-your Python environment, e.g.
-`C:\path\to\venv\Scripts\nanoc-dap.exe`; the Linux default path does not
-exist there.
+On **Windows**, the extension usually finds `nanoc-dap` via `PATH` after
+`pip install .`. If it does not, set `"nanoc.dapPath"` in VS Code settings to
+the adapter in your Python environment, e.g.
+`C:\path\to\venv\Scripts\nanoc-dap.exe`.
 
 `build_vsix.py` needs only Python. The VSIX is **gitignored** and therefore
 not included in the GitHub ZIP; build it with the script or use a release

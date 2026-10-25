@@ -29,8 +29,9 @@ The extension looks for the adapter in this order:
 2. `~/.local/venvs/nanoc/bin/nanoc-dap` (the Linux setup default),
 3. `nanoc-dap` on `PATH`.
 
-On **Windows**, the Linux default path does not exist. Set
-`"nanoc.dapPath"` to the adapter in your Python environment, for example:
+On **Windows**, the extension usually finds `nanoc-dap` on `PATH`. If it does
+not, set `"nanoc.dapPath"` to the adapter in your Python environment, for
+example:
 
 ```json
 "nanoc.dapPath": "C:\\path\\to\\venv\\Scripts\\nanoc-dap.exe"
