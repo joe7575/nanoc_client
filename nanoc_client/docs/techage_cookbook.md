@@ -81,9 +81,8 @@ compact block with its own animated texture; mount it on any face of the
 machine. It detects the machine on its back side (the same direction logic as
 the IOT sensor port 0), without a formspec. Right-click re-detects.
 
-The **TA3 furnace needs it**. The **TA4 electronic fab now has the same topics
-built in** (see below), so it works directly without an adapter. The adapter
-remains useful for fabs of older generations and as a fallback.
+The **TA3 furnace needs it**. The **TA4 electronic fab** provides the same
+topics directly (see below), so it works without an adapter.
 
 | Topic | Kind | Payload | Meaning |
 |---|---|---|---|
