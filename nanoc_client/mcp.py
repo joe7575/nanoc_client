@@ -34,9 +34,11 @@ _CONN = {
 TOOLS = [
     {
         "name": "nanoc_scan",
-        "description": "Dump the TA4 techage network around the controller as "
-                       "JSON (nodes with number/state/inventory/caps and edges); "
-                       "TA5 teleport bridges appear with via='teleport', Hyperloop chests/tanks with via='hyperloop'.",
+        "description": "Dump the TA4 techage network around the online controller "
+                       "owner (or the controller) as JSON (nodes with "
+                       "number/state/inventory/caps and edges); TA5 teleport "
+                       "bridges appear with via='teleport', Hyperloop "
+                       "chests/tanks with via='hyperloop'. Radius max 16.",
         "inputSchema": {"type": "object", "properties": {
             "radius": _INT, **_CONN}},
     },
