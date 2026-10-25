@@ -48,6 +48,33 @@ use `--tls` and one of `--cafile cert.pem` (verified), `--tls-fingerprint
 is plaintext and protected only by the token — keep it inside a trusted LAN
 and never forward the port on the router.
 
+### TLS certificate (clients)
+
+The certificate is **server-specific and public**. Ask the server owner for
+`cert.pem` (or its SHA-256 fingerprint) and store it outside the installed
+package, in a per-user directory:
+
+- Windows: `%APPDATA%\nanoc\cert.pem`
+  (`C:\Users\<user>\AppData\Roaming\nanoc\cert.pem`)
+- Linux: `~/.config/nanoc/cert.pem`
+- macOS: `~/Library/Application Support/nanoc/cert.pem`
+
+Use it with `--cafile <path>` (or pin it with `--tls-fingerprint <sha256>`).
+For a CA-signed certificate the system trust store is enough; no `cert.pem`
+is needed. Do not put the certificate into the extracted ZIP or
+`site-packages` (pip updates remove it), and **never copy `key.pem` to a
+client**.
+
+Windows examples:
+
+```bat
+nanoc read --host <host> --port <port> --tls --cafile "%APPDATA%\nanoc\cert.pem" --token <token>
+```
+
+PowerShell: `--cafile "$env:APPDATA\nanoc\cert.pem"`.
+VS Code: `"cafile": "C:\\Users\\<user>\\AppData\\Roaming\\nanoc\\cert.pem"`.
+MCP: `NANOC_CAFILE=C:\Users\<user>\AppData\Roaming\nanoc\cert.pem`.
+
 ## Testing (no Luanti needed)
 
 A mock server speaks the same protocol:
@@ -106,7 +133,7 @@ configuration. Either trust the server certificate:
 
 ```json
   "tls": true,
-  "cafile": "/home/joachim/luanti-5.11.0/nanoc-tls/cert.pem"
+  "cafile": "C:\\Users\\<user>\\AppData\\Roaming\\nanoc\\cert.pem"
 ```
 
 or pin its SHA-256 fingerprint (`"tlsFingerprint": "<hex>"`), or disable

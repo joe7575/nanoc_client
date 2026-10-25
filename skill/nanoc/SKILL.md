@@ -95,6 +95,9 @@ normally do not have these. Use the GitHub repositories:
   stuck item. The scan covers only the area around the player; for a large
   plant, run it from several positions. Furnace topic 141 is the configured output name, not inventory;
   leftover furnace `src` items cannot be pulled by pushers.
+- TLS: ask the server owner for `cert.pem` (public; **never** `key.pem`),
+  store it per-user and pass `--cafile`/`NANOC_CAFILE`, or pin it with
+  `--tls-fingerprint`.
 - Do not move blocks or change the world (move/turn/pusher commands) unless the
   user explicitly asks for it. Prefer machine state commands.
 
