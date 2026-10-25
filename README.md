@@ -75,6 +75,24 @@ PowerShell: `--cafile "$env:APPDATA\nanoc\cert.pem"`.
 VS Code: `"cafile": "C:\\Users\\<user>\\AppData\\Roaming\\nanoc\\cert.pem"`.
 MCP: `NANOC_CAFILE=C:\Users\<user>\AppData\Roaming\nanoc\cert.pem`.
 
+Get the SHA-256 fingerprint from the certificate file:
+
+```bash
+openssl x509 -in cert.pem -noout -fingerprint -sha256
+```
+
+On Windows without OpenSSL, use the Python that runs the client:
+
+```bat
+python -c "import ssl,hashlib; der=ssl.PEM_cert_to_DER_cert(open(r'C:\path\to\cert.pem').read()); print(hashlib.sha256(der).hexdigest())"
+```
+
+The fingerprint is the SHA-256 of the certificate (not of the file). Pass it
+with or without colons: `--tls-fingerprint "AB:CD:..."`, VS Code
+`"tlsFingerprint": "..."`, MCP `NANOC_TLS_FINGERPRINT=...`. It changes when the
+certificate is renewed. Do **not** use `certutil -hashfile` – that hashes the
+file, not the certificate.
+
 ## Testing (no Luanti needed)
 
 A mock server speaks the same protocol:
