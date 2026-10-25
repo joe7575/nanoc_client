@@ -76,11 +76,10 @@ in multiple slots; count them to get the required amount.
 
 ## Recipe adapter (ta4_recipe_adapter)
 
-Recipe source for machines that do not expose recipes themselves. It uses the
-Beduino IOT sensor's size, textures and wall/floor/ceiling variants; mount it
-on any face of the machine. It detects the machine on its back side (the same
-direction logic as the IOT sensor port 0), without a formspec. Right-click
-re-detects.
+Recipe source for machines that do not expose recipes themselves. It is a
+compact block with its own animated texture; mount it on any face of the
+machine. It detects the machine on its back side (the same direction logic as
+the IOT sensor port 0), without a formspec. Right-click re-detects.
 
 The **TA3 furnace needs it**. The **TA4 electronic fab now has the same topics
 built in** (see below), so it works directly without an adapter. The adapter
