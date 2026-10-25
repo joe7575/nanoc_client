@@ -14,7 +14,10 @@ reach it through the `nanoc_*` MCP tools.
 
 1. Read the MCP resource `nanoc://workflow` for the loop and the gotchas.
 2. `nanoc_scan` — get the techage network: node `number`, `name`, `label`,
-   `state`, `inv`, `inv_state`, `caps`, `edges`.
+   `state`, `inv`, `inv_state`, `caps`, `edges`. Stand at the plant: the scan
+   is centered on the online controller owner (radius max 16). For a larger
+   plant, scan from several positions; it is an area scan, not a network
+   traversal, so one corner is not enough.
 3. `nanoc_catalog` — get topic semantics (send/request, payload, response).
 
 Do not guess node numbers or topics. Take them from scan/catalog. Only nodes
@@ -89,7 +92,8 @@ normally do not have these. Use the GitHub repositories:
 - `printf` output comes back from `nanoc_read`/`nanoc_exec`; `log("...")` lines
   are prefixed `[log]`.
 - In `nanoc_scan`, a pusher's `main` item is its configured filter, not a
-  stuck item. Furnace topic 141 is the configured output name, not inventory;
+  stuck item. The scan covers only the area around the player; for a large
+  plant, run it from several positions. Furnace topic 141 is the configured output name, not inventory;
   leftover furnace `src` items cannot be pulled by pushers.
 - Do not move blocks or change the world (move/turn/pusher commands) unless the
   user explicitly asks for it. Prefer machine state commands.

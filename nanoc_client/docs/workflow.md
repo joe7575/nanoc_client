@@ -13,7 +13,7 @@ controller. Without it the tools fail.
 
 ## The loop
 
-1. `nanoc_scan` — dump the Techage network around the controller as JSON:
+1. `nanoc_scan` — dump the Techage network around the online controller owner (the player) as JSON:
    nodes with `number`, `name`, `label`, `state`, `inv`, `inv_state`, `caps`,
    and `edges`. Use the **`number`** fields; that is how programs address nodes.
 2. `nanoc_catalog` — dump the topic catalog (topic -> kind/name/payload/response)
@@ -84,7 +84,10 @@ Nodes without a techage number use their position string as `id`; only nodes
 with a `number` can be addressed by the program. The scan is limited to TA4
 nodes, TA5 teleport bridges, Hyperloop chests/tanks and the given radius
 (1–16), centered on the controller owner while that player is online (otherwise
-the controller). Teleport bridges (`techage:ta5_tele_tube` / `_pipe`) show
+the controller). **Stand at the plant before scanning.** The scan is an area
+scan, not a network traversal: for a larger plant, run it several times from
+different positions (or stand at another corner) to cover the whole plant;
+capturing one corner does not include the rest. Teleport bridges (`techage:ta5_tele_tube` / `_pipe`) show
 their wireless pair as `via = "teleport"`; Hyperloop chests/tanks
 (`techage:ta5_hl_chest` / `_tank`) show their paired block as
 `via = "hyperloop"` and carry a `hyperloop` object with `role`

@@ -38,7 +38,9 @@ TOOLS = [
                        "owner (or the controller) as JSON (nodes with "
                        "number/state/inventory/caps and edges); TA5 teleport "
                        "bridges appear with via='teleport', Hyperloop "
-                       "chests/tanks with via='hyperloop'. Radius max 16.",
+                       "chests/tanks with via='hyperloop'. Radius max 16. "
+                       "Stand at the plant; for a larger plant scan from "
+                       "several positions (area scan, not network traversal).",
         "inputSchema": {"type": "object", "properties": {
             "radius": _INT, **_CONN}},
     },
