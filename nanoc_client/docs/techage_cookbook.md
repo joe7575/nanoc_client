@@ -105,9 +105,18 @@ printf("%d\n", ta_req_data(dc, 147, q))
 | 67 | send | `"text"` | add one line (scroll) |
 | 68 | send | `"<row> <text>"` | write row 1..n (space separated) |
 
-Payloads are strings. NanoBasic `dclr(dp)` is topic 17;
-`dputs(dp, 0, text)` is topic 67 (add line); `dputs(dp, row, text)` with
-row > 0 is topic 68 and needs a **space** between row and text. Example:
+Payloads are strings. NanoC has the same helpers as NanoBasic:
+`dclr(dp)` clears the display (topic 17); `dputs(dp, 0, text)` adds a line
+(topic 67); `dputs(dp, row, text)` with row > 0 writes that row (topic 68).
+Example:
+
+```c
+dclr(display)
+dputs(display, 0, "closed")
+dputs(display, 1, "12:30")
+```
+
+Raw form (topic 68 needs a **space** between row and text):
 
 ```c
 int32 p0[0]
@@ -197,14 +206,17 @@ stops.
 
 ## NanoC notes for plant programs
 
-- NanoBasic `hold`/`release` have no NanoC equivalent (commands are
-  synchronous); `sleep(1)` is seconds, use `sleep(1000)` in NanoC.
-- `goto`/`gosub` become functions/loops; `str$` becomes `str()`. NanoBasic
-  `daytime$` is not available in NanoC; use `millis()` or omit the time.
+- `hold`/`release` work like in NanoBasic (buffer commands, send together).
+  `sleep(1)` is seconds, use `sleep(1000)` in NanoC.
+- `goto`/`gosub` become functions/loops; `str$` becomes `str()`.
+  `time()`, `daytime()` and `daytime$(british)` provide the game clock.
+- `dclr`/`dputs` are available as helpers (see the display section).
 - `ta_send_cmd`/`ta_req_data(_s)` may be used as plain statements; their result
   is discarded. Assign it (`g_rc = ta_send_cmd(...)`) if you need the status.
-  This needs **nanoclib >= 0.2.5**; older cores reject bare value-returning
-  calls. `sleep()` and `log()` return nothing and always worked as statements.
+  This needs **nanoclib >= 0.2.5**; inside functions with parameters use
+  **>= 0.2.6** (earlier versions popped a local instead of the unused result
+  and corrupted the parameters). `sleep()` and `log()` return nothing and
+  always worked as statements.
 - Recipe data lists duplicate inputs as separate slots. Sum the counts per item
   name before checking stock or feeding a machine (bronze: 3x copper + 1x tin).
 - `for i = 1 to 0` executes the body **once** (do-while); guard descending

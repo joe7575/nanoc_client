@@ -180,6 +180,10 @@ class NanocClient:
         self.send_debug(p.Command.BACKTRACE)
         return self.recv_debug()
 
+    def info(self):
+        self.send_debug(p.Command.INFO)
+        return self.recv_debug()
+
     # -- terminal -----------------------------------------------------------
     def send_terminal(self, data: bytes) -> None:
         self.send_frame(p.Channel.TERMINAL, data)

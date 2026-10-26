@@ -46,6 +46,13 @@ TOOLS = [
             "radius": _INT, **_CONN}},
     },
     {
+        "name": "nanoc_ping",
+        "description": "Check that the controller is reachable and loaded. "
+                       "Returns JSON with number, pos, name, owner, running/"
+                       "paused state, program presence and nanoclib version.",
+        "inputSchema": {"type": "object", "properties": {**_CONN}},
+    },
+    {
         "name": "nanoc_catalog",
         "description": "Dump the Beduino/techage topic catalog as JSON "
                        "(topic -> kind/name/payload/response) plus the node "
@@ -190,6 +197,15 @@ RESOURCES = [
                        "return and eject pushers.",
         "mimeType": "text/plain",
         "file": "examples/oven_control.nanoc",
+    },
+    {
+        "uri": "nanoc://examples/blinds_demo",
+        "name": "Example: window blinds",
+        "description": "Generic one-window blind demo with hold()/release(), "
+                       "door-controller wave, light detector and display; "
+                       "placeholder two-digit node numbers.",
+        "mimeType": "text/plain",
+        "file": "examples/blinds_demo.nanoc",
     },
 ]
 
@@ -352,6 +368,20 @@ class McpServer:
             text = _compiler_message(resp)
             if status != 0 or not text:
                 raise McpError(-32603, "scan failed")
+            return text
+        finally:
+            client.close()
+
+    def _tool_nanoc_ping(self, args):
+        client = _connect(self._conn(args))
+        try:
+            resp = _cmd(client, p.Command.INFO, timeout=5)
+            status = resp[0] if resp else 1
+            text = _compiler_message(resp)
+            if status == p.Status.NOT_LOADED:
+                raise McpError(-32603, "controller not available (area not loaded)")
+            if status != 0 or not text:
+                raise McpError(-32603, "ping failed")
             return text
         finally:
             client.close()

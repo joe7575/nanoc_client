@@ -13,21 +13,24 @@ controller. Without it the tools fail.
 
 ## The loop
 
-1. `nanoc_scan` — dump the Techage network around the online controller owner (the player) as JSON:
+1. `nanoc_ping` — check the connection and read the controller number, position,
+   owner, run state and nanoclib version as JSON. Use it when a tool reports a
+   connection/token problem or when output is empty.
+2. `nanoc_scan` — dump the Techage network around the online controller owner (the player) as JSON:
    nodes with `number`, `name`, `label`, `state`, `inv`, `inv_state`, `caps`,
    and `edges`. Use the **`number`** fields; that is how programs address nodes.
-2. `nanoc_catalog` — dump the topic catalog (topic -> kind/name/payload/response)
+3. `nanoc_catalog` — dump the topic catalog (topic -> kind/name/payload/response)
    and the node name-pattern rules. Use it to pick the right topic for each node.
    For verified block behaviour (pusher filter/limit, autocrafter recipe
    reference, chest and recipe-block topics, signal tower), read
    `nanoc://cookbook`.
-3. Write the program (see `nanoc://language`, `nanoc://manual`,
+4. Write the program (see `nanoc://language`, `nanoc://manual`,
    `nanoc://reference`, `nanoc://examples/...`).
-4. `nanoc_check` — local lint before uploading. Returns `file:line: message`
+5. `nanoc_check` — local lint before uploading. Returns `file:line: message`
    or `OK`.
-5. `nanoc_exec` — upload, compile, run and read the terminal output in one call.
+6. `nanoc_exec` — upload, compile, run and read the terminal output in one call.
    If the compile fails, the returned text starts with `compile failed:`.
-6. Refine and repeat. Use `nanoc_program_get` to read what is currently stored,
+7. Refine and repeat. Use `nanoc_program_get` to read what is currently stored,
    `nanoc_run` / `nanoc_stop` to resume/pause without uploading.
 
 ## Program basics

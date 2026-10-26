@@ -40,6 +40,8 @@ COPIES = [
      "examples/fab_control.nanoc"),
     ("examples/oven_control.nanoc", "nanoc_mod",
      "examples/oven_control.nanoc"),
+    ("examples/blinds_demo.nanoc", "nanoc_mod",
+     "examples/blinds_demo.nanoc"),
 ]
 
 

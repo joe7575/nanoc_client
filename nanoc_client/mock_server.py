@@ -212,6 +212,20 @@ class MockServer:
                 "edges": [{"from": "0102", "to": "0110", "dir": 2, "via": "tube"}],
             }).encode("utf-8")
             resp = [int(cmd), int(p.Status.OK), len(text)] + list(text)
+        elif cmd == p.Command.INFO:
+            text = json.dumps({
+                "available": True,
+                "number": 1234,
+                "pos": {"x": 1, "y": 2, "z": 3},
+                "name": "mock",
+                "owner": "tester",
+                "running": not self.halted,
+                "paused": self.halted,
+                "program": bool(self.program),
+                "protocol": p.PROTOCOL,
+                "nanoclib": "0.2.6",
+            }).encode("utf-8")
+            resp = [int(cmd), int(p.Status.OK), len(text)] + list(text)
         elif cmd == p.Command.CATALOG:
             text = json.dumps({
                 "topics": {

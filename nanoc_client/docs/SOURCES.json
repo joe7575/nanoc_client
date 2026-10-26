@@ -1,9 +1,13 @@
 {
   "beduino": {
-    "commit": "034a0e474a2d76a74ea2523bc787b19dbb72d0fd",
-    "dirty": true
+    "commit": "93b4afb00d8dc5f55c64ab9d141479d98a798a81",
+    "dirty": false
   },
   "files": {
+    "examples/blinds_demo.nanoc": {
+      "file": "examples/blinds_demo.nanoc",
+      "root": "nanoc_mod"
+    },
     "examples/fab_control.nanoc": {
       "file": "examples/fab_control.nanoc",
       "root": "nanoc_mod"
@@ -42,11 +46,11 @@
     }
   },
   "nanoc_docs": {
-    "commit": "87af1dd2209b1cb0e4b2b479a396ddc090a12e15",
+    "commit": "fe75087d7edd3d5a8c55ec695f0ea1b78ab09c7c",
     "dirty": false
   },
   "nanoc_mod": {
-    "commit": "cac95b47074a3c36c49efdab5a2b2c8571267acf",
-    "dirty": true
+    "commit": "e73b42bf5d22467702a27fefc3c18db8a981c526",
+    "dirty": false
   }
 }

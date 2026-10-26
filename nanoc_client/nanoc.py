@@ -3,6 +3,7 @@
 Non-interactive, so it can be driven by scripts and AI agents:
 
     nanoc check app.nanoc            # local lint (Problems-style output)
+    nanoc ping                       # availability, number, position, state
     nanoc push  app.nanoc            # upload + compile (errors on stderr)
     nanoc run                        # continue/resume the controller
     nanoc stop                       # halt (pause) the controller
@@ -126,6 +127,52 @@ def cmd_check(args):
     for line, msg in errors:
         print(f"{args.file}:{line}: error: {msg}")
     return 1 if errors else 0
+
+
+def cmd_ping(args):
+    client = _connect(args)
+    try:
+        resp = _cmd(client, p.Command.INFO, timeout=5)
+        status = resp[0] if resp else 1
+        text = _compiler_message(resp)
+        if status == p.Status.NOT_LOADED:
+            print("Controller not available (area not loaded)", file=sys.stderr)
+            return 1
+        if status != 0 or not text:
+            print("error: ping failed", file=sys.stderr)
+            return 1
+        try:
+            info = json.loads(text)
+        except ValueError:
+            print(text)
+            return 0
+        if not isinstance(info, dict):
+            print(text)
+            return 0
+
+        def num(value):
+            # minetest.write_json emits integral Lua numbers as floats.
+            try:
+                f = float(value)
+            except (TypeError, ValueError):
+                return str(value)
+            return str(int(f)) if f.is_integer() else str(f)
+
+        pos = info.get("pos") or {}
+        name = info.get("name") or ""
+        label = f' "{name}"' if name else ""
+        print(f"Controller {num(info.get('number', 0))}{label} at "
+              f"({num(pos.get('x', 0))}, {num(pos.get('y', 0))}, "
+              f"{num(pos.get('z', 0))}) available")
+        state = "running" if info.get("running") else "stopped"
+        if info.get("paused"):
+            state += ", paused"
+        program = "program loaded" if info.get("program") else "no program"
+        print(f"  owner {info.get('owner') or '-'}, {state}, {program}, "
+              f"nanoclib {info.get('nanoclib') or '?'}")
+        return 0
+    finally:
+        client.close()
 
 
 def cmd_push(args):
@@ -266,6 +313,10 @@ def main(argv=None):
     pc = sub.add_parser("check", help="lint a file locally")
     pc.add_argument("file")
     pc.set_defaults(func=cmd_check)
+
+    ppi = sub.add_parser("ping", help="check availability and print controller info")
+    _add_conn(ppi)
+    ppi.set_defaults(func=cmd_ping)
 
     pp = sub.add_parser("push", help="upload + compile a file")
     pp.add_argument("file")

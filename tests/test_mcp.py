@@ -66,6 +66,7 @@ class TestMcpServer(unittest.TestCase):
         names = [t["name"] for t in r["result"]["tools"]]
         self.assertIn("nanoc_scan", names)
         self.assertIn("nanoc_catalog", names)
+        self.assertIn("nanoc_ping", names)
         self.assertIn("nanoc_exec", names)
 
     def test_resources(self):
@@ -78,11 +79,21 @@ class TestMcpServer(unittest.TestCase):
         self.assertIn("nanoc://topics", uris)
         self.assertIn("nanoc://cookbook", uris)
         self.assertIn("nanoc://examples/factory_control", uris)
+        self.assertIn("nanoc://examples/blinds_demo", uris)
         r = self._call(3, "resources/read", {"uri": "nanoc://workflow"})
         text = r["result"]["contents"][0]["text"]
         self.assertIn("nanoc_scan", text)
         r = self._call(4, "resources/read", {"uri": "nanoc://nope"})
         self.assertIn("error", r)
+
+    def test_ping_tool(self):
+        self._call(1, "initialize", {"protocolVersion": "2024-11-05"})
+        r = self._call(2, "tools/call",
+                       {"name": "nanoc_ping", "arguments": {}})
+        self.assertFalse(r["result"]["isError"])
+        text = r["result"]["content"][0]["text"]
+        self.assertIn('"number": 1234', text)
+        self.assertIn('"available": true', text)
 
     def test_catalog_tool(self):
         self._call(1, "initialize", {"protocolVersion": "2024-11-05"})

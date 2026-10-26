@@ -60,6 +60,14 @@ class TestNanocCli(unittest.TestCase):
         self.assertEqual(code, 0, err)
         self.assertIn("tick", out)
 
+    def test_ping(self):
+        code, out, err = run_main(
+            ["ping", "--port", str(self.port), "--token", "tok"])
+        self.assertEqual(code, 0, err)
+        self.assertIn("Controller 1234", out)
+        self.assertIn("available", out)
+        self.assertIn("nanoclib 0.2.6", out)
+
     def test_scan(self):
         code, out, err = run_main(
             ["scan", "--port", str(self.port), "--token", "tok"])

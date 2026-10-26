@@ -48,6 +48,7 @@ class Command(IntEnum):
     PROG_SET = 0x21
     SCAN = 0x22
     CATALOG = 0x23
+    INFO = 0x24
 
 
 class Event(IntEnum):

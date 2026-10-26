@@ -205,6 +205,7 @@ Non-interactive commands, useful for scripts and AI agents (OpenCode, Claude,
 
 ```bash
 nanoc check app.nanoc                    # local lint (file:line: error)
+nanoc ping  --token T                    # availability, number, position, state
 nanoc push  app.nanoc --token T          # upload + compile (errors on stderr)
 nanoc run   --token T                    # resume the controller
 nanoc stop  --token T                    # halt (pause)
@@ -221,16 +222,17 @@ controller form), `--tls`, `--cafile`, `--tls-fingerprint`, `--tls-insecure`.
 improve.
 
 A newly placed controller with an empty program produces no terminal output.
-To check TLS/token/bridge without output, use `nanoc catalog` (returns the
-topic catalog) or `nanoc scan --radius 8` (returns the controller/plant if its
-area is loaded). `nanoc read` only shows terminal output.
+Use `nanoc ping --token T` to check TLS/token/bridge and show controller
+number, position, owner, run state and nanoclib version. `nanoc catalog`
+returns the topic catalog; `nanoc scan --radius 8` returns the plant if its
+area is loaded. `nanoc read` only shows terminal output.
 
 ## MCP server (`nanoc-mcp`)
 
 Exposes the bridge to AI clients (Claude Desktop, OpenCode, …) as MCP tools:
 
-`nanoc_scan`, `nanoc_check`, `nanoc_push`, `nanoc_program_get`, `nanoc_run`,
-`nanoc_stop`, `nanoc_read`, `nanoc_exec`.
+`nanoc_ping`, `nanoc_scan`, `nanoc_catalog`, `nanoc_check`, `nanoc_push`,
+`nanoc_program_get`, `nanoc_run`, `nanoc_stop`, `nanoc_read`, `nanoc_exec`.
 
 Connection defaults come from the environment (`NANOC_HOST`, `NANOC_PORT`,
 `NANOC_TOKEN`, `NANOC_TLS`, `NANOC_CAFILE`, `NANOC_TLS_INSECURE`,

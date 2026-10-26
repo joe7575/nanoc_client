@@ -1,6 +1,6 @@
 ---
 name: nanoc
-description: Use when controlling or inspecting a NanoC controller in Luanti/Minetest over MCP - techage machines, node numbers, ta_send_cmd/ta_req_data, nanoc_scan, nanoc_catalog, nanoc_exec, .nanoc files, techage automation, factory control. Trigger on NanoC, techage, Beduino commands, or when the user asks to automate machines in Luanti/Minetest. For questions about the running world/network state, use nanoc_scan/nanoc_catalog instead of searching the techage source.
+description: Use when controlling or inspecting a NanoC controller in Luanti/Minetest over MCP - techage machines, node numbers, ta_send_cmd/ta_req_data, nanoc_ping, nanoc_scan, nanoc_catalog, nanoc_exec, .nanoc files, techage automation, factory control. Trigger on NanoC, techage, Beduino commands, or when the user asks to automate machines in Luanti/Minetest. For questions about the running world/network state, use nanoc_scan/nanoc_catalog instead of searching the techage source.
 license: AGPL-3.0-or-later
 ---
 
@@ -13,12 +13,14 @@ reach it through the `nanoc_*` MCP tools.
 ## First steps, always
 
 1. Read the MCP resource `nanoc://workflow` for the loop and the gotchas.
-2. `nanoc_scan` — get the TA3/TA4/TA5 Techage command blocks (TA2 excluded): node `number`, `name`, `label`,
+2. `nanoc_ping` — check bridge/token/controller and read number, position,
+   owner, run state and nanoclib version.
+3. `nanoc_scan` — get the TA3/TA4/TA5 Techage command blocks (TA2 excluded): node `number`, `name`, `label`,
    `state`, `inv`, `inv_state`, `caps`, `edges`. Stand at the plant: the scan
    is centered on the online controller owner (radius max 16). For a larger
    plant, scan from several positions; it is an area scan, not a network
    traversal, so one corner is not enough.
-3. `nanoc_catalog` — get topic semantics (send/request, payload, response).
+4. `nanoc_catalog` — get topic semantics (send/request, payload, response).
 
 Do not guess node numbers or topics. Take them from scan/catalog. Only nodes
 with a numeric `number` can be addressed.
@@ -31,7 +33,7 @@ served by the MCP server:
 - `nanoc://workflow`, `nanoc://language`, `nanoc://manual`,
   `nanoc://reference`, `nanoc://topics`, `nanoc://cookbook`,
   `nanoc://examples/...`
-- live: `nanoc_scan`, `nanoc_catalog`, `nanoc_read`.
+- live: `nanoc_ping`, `nanoc_scan`, `nanoc_catalog`, `nanoc_read`.
 
 **Runtime** questions (which nodes exist, state, inventories, connections):
 use `nanoc_scan`/`nanoc_catalog`; never read source for this.
@@ -55,13 +57,17 @@ normally do not have these. Use the GitHub repositories:
 - Reference: `nanoc://language` (primer), `nanoc://manual`, `nanoc://reference`,
   `nanoc://topics`, `nanoc://cookbook`, `nanoc://examples/techage_monitor`,
   `nanoc://examples/termlib_demo`, `nanoc://examples/factory_control`,
-  `nanoc://examples/fab_control`, `nanoc://examples/oven_control`.
+  `nanoc://examples/fab_control`, `nanoc://examples/oven_control`,
+  `nanoc://examples/blinds_demo`.
 - NanoC is C-like but not C: `func` instead of `void`, no floats, `//`
   comments, `{ }` blocks, no semicolons at line end, `int32`/`str8`/`u8`/`u16`/`u32`.
 - Techage calls: `ta_send_cmd(number, topic, payload)` and
   `ta_req_data(number, topic, payload)`; string payloads for `ta_send_cmd`
   topics >= 64 and for `ta_req_data` topics >= 192, numeric arrays otherwise.
   Topic 1 on the controller itself is run/stop.
+- Convenience helpers: `hold()`/`release()` batch commands, `dclr(display)` /
+  `dputs(display, row, text)` for displays, `daytime()` / `daytime$(british)` /
+  `time()` for the game clock.
 - Lint first with `nanoc_check`, then `nanoc_exec` (upload + compile + run +
   read output). On `compile failed:` read the line numbers and fix.
 - Long-running logic needs a loop with `sleep(ms)`; after `main()` returns the
@@ -78,8 +84,9 @@ normally do not have these. Use the GitHub repositories:
 - No structs, no 2-D arrays, no floats; a single array block is max 127 words
   (512 bytes). The call stack is 128 words; deep recursion overflows.
 - `ta_send_cmd`/`ta_req_data(_s)` can be used as plain statements (result
-  discarded) on **nanoclib >= 0.2.5**. Assign it (`g_rc = ta_send_cmd(...)`)
-  when you need the status; older cores reject bare value-returning calls.
+  discarded) on **nanoclib >= 0.2.5**; inside functions with parameters use
+  **>= 0.2.6** (earlier versions corrupted the parameters). Assign it
+  (`g_rc = ta_send_cmd(...)`) when you need the status.
 - Recipe lists repeat duplicate inputs as separate slots; sum them per item
   name before checking stock or feeding a machine.
 
@@ -91,7 +98,8 @@ normally do not have these. Use the GitHub repositories:
 - The controller must be in a loaded/forceloaded area, otherwise `NOT_LOADED`.
 - `printf` output comes back from `nanoc_read`/`nanoc_exec`; `log("...")` lines
   are prefixed `[log]`. A new controller with no program shows no output:
-  ping it with `nanoc_catalog` (TLS/token/bridge) or `nanoc_scan` (loaded/plant).
+  ping it with `nanoc_ping` (TLS/token/bridge/controller info) or
+  `nanoc_scan` (loaded plant).
 - In `nanoc_scan`, a pusher's `main` item is its configured filter, not a
   stuck item. The scan covers only the area around the player; for a large
   plant, run it from several positions. Furnace topic 141 is the configured output name, not inventory;
