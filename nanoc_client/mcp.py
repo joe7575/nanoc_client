@@ -34,11 +34,12 @@ _CONN = {
 TOOLS = [
     {
         "name": "nanoc_scan",
-        "description": "Dump the TA4 techage network around the online controller "
-                       "owner (or the controller) as JSON (nodes with "
-                       "number/state/inventory/caps and edges); TA5 teleport "
-                       "bridges appear with via='teleport', Hyperloop "
-                       "chests/tanks with via='hyperloop'. Radius max 16. "
+        "description": "Dump the TA3/TA4/TA5 Techage command blocks around the "
+                       "online controller owner (or the controller) as JSON "
+                       "(nodes with number/state/inventory/caps and edges); "
+                       "TA5 teleport bridges appear with via='teleport', "
+                       "Hyperloop chests/tanks with via='hyperloop'. TA1/TA2 "
+                       "are excluded. Radius max 16. "
                        "Stand at the plant; for a larger plant scan from "
                        "several positions (area scan, not network traversal).",
         "inputSchema": {"type": "object", "properties": {

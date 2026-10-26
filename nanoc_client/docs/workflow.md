@@ -81,17 +81,18 @@ Node states from topic `129`: 1 running, 2 blocked, 3 standby, 4 no power,
 ```
 
 Nodes without a techage number use their position string as `id`; only nodes
-with a `number` can be addressed by the program. The scan is limited to TA4
-nodes, TA5 teleport bridges, Hyperloop chests/tanks and the given radius
-(1–16), centered on the controller owner while that player is online (otherwise
-the controller). **Stand at the plant before scanning.** The scan is an area
-scan, not a network traversal: for a larger plant, run it several times from
-different positions (or stand at another corner) to cover the whole plant;
-capturing one corner does not include the rest. Teleport bridges (`techage:ta5_tele_tube` / `_pipe`) show
-their wireless pair as `via = "teleport"`; Hyperloop chests/tanks
-(`techage:ta5_hl_chest` / `_tank`) show their paired block as
-`via = "hyperloop"` and carry a `hyperloop` object with `role`
-(server/client), `conn_name`, `remote_name` and `conn_status`.
+with a `number` can be addressed by the program. The scan includes TA3/TA4/TA5
+Techage command blocks (TA1/TA2 excluded), TA5 teleport bridges, Hyperloop
+chests/tanks and the given radius (1–16), centered on the controller owner
+while that player is online (otherwise the controller). Building lamps are
+included read-only without caps. **Stand at the plant before scanning.** The
+scan is an area scan, not a network traversal: for a larger plant, run it
+several times from different positions (or stand at another corner) to cover
+the whole plant; capturing one corner does not include the rest. Teleport
+bridges (`techage:ta5_tele_tube` / `_pipe`) show their wireless pair as
+`via = "teleport"`; Hyperloop chests/tanks (`techage:ta5_hl_chest` / `_tank`)
+show their paired block as `via = "hyperloop"` and carry a `hyperloop` object
+with `role` (server/client), `conn_name`, `remote_name` and `conn_status`.
 
 ## Important behavior and limits
 

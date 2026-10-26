@@ -13,7 +13,7 @@ reach it through the `nanoc_*` MCP tools.
 ## First steps, always
 
 1. Read the MCP resource `nanoc://workflow` for the loop and the gotchas.
-2. `nanoc_scan` — get the techage network: node `number`, `name`, `label`,
+2. `nanoc_scan` — get the TA3/TA4/TA5 Techage command blocks (TA2 excluded): node `number`, `name`, `label`,
    `state`, `inv`, `inv_state`, `caps`, `edges`. Stand at the plant: the scan
    is centered on the online controller owner (radius max 16). For a larger
    plant, scan from several positions; it is an area scan, not a network

@@ -1,6 +1,7 @@
 # Techage cookbook for NanoC
 
-Verified behaviour of the TA4 blocks used by NanoC. Everything here is
+Verified behaviour of the Techage blocks used by NanoC (TA3/TA4/TA5).
+Everything here is
 available at runtime through the `nanoc_*` tools; no mod source is required.
 
 Every call is one of:
@@ -74,6 +75,61 @@ in multiple slots; count them to get the required amount.
 | 2 | send | `[0\|1\|2\|3]` | off / green / amber / red |
 | 130 | request | - | current colour |
 
+## Door controller II (ta3_doorcontroller2)
+
+| Topic | Kind | Payload | Meaning |
+|---|---|---|---|
+| 1 | send | `[0\|1]` | stop / start |
+| 9 | send | `[cmd, idx]` | `0`=exchange, `1`=set, `2`=dig, `3`=reset, `4`=to1 (initial), `5`=to2 (exchange); `idx`=slot 1..6 |
+| 147 | request | `[idx]` | slot state: `1`=initial, `2`=exchange |
+
+Topic 147 is a **request** (`ta_req_data`), not a send. Example:
+
+```c
+int32 p[1]
+int32 q[0]
+p[0] = 4
+p[1] = slot
+ta_send_cmd(dc, 9, p)       // {4, slot} = to1
+p[0] = 5
+ta_send_cmd(dc, 9, p)       // {5, slot} = to2
+q[0] = slot
+printf("%d\n", ta_req_data(dc, 147, q))
+```
+
+## Display (ta4_display, ta4_display2, ta3_monitor)
+
+| Topic | Kind | Payload | Meaning |
+|---|---|---|---|
+| 17 | send | - | clear |
+| 67 | send | `"text"` | add one line (scroll) |
+| 68 | send | `"<row> <text>"` | write row 1..n (space separated) |
+
+Payloads are strings. NanoBasic `dclr(dp)` is topic 17;
+`dputs(dp, 0, text)` is topic 67 (add line); `dputs(dp, row, text)` with
+row > 0 is topic 68 and needs a **space** between row and text. Example:
+
+```c
+int32 p0[0]
+ta_send_cmd(display, 67, "closed")
+ta_send_cmd(display, 68, "1 closed")
+ta_send_cmd(display, 17, p0)
+```
+
+## Other command blocks
+
+- **TA5 fly controller** (`ta5_flycontroller`): topics `11`, `18`, `19`, `24`,
+  request `129` (same movement semantics as the move controller).
+- **TA5 teleport block** (`ta5_tele_tube` / `_pipe`): topics `1` (start/stop),
+  request `129` (state); the wireless pair is shown in the scan as an edge
+  with `via = "teleport"`.
+- **TA3 monitor** (`ta3_monitor`): same display topics `17`/`67`/`68`.
+- Building lamps, the observer, the Basic Terminal, flip-flop, timer and the
+  command/mesecons converters have **no Beduino interface** (they are
+  power-controlled, string-command-only or formspec-only). They appear in the
+  scan but have no `caps`.
+- The scan includes TA3/TA4/TA5 command blocks; TA1/TA2 are excluded.
+
 ## Recipe adapter (ta4_recipe_adapter)
 
 Recipe source for machines that do not expose recipes themselves. It is a
@@ -141,6 +197,10 @@ stops.
 
 ## NanoC notes for plant programs
 
+- NanoBasic `hold`/`release` have no NanoC equivalent (commands are
+  synchronous); `sleep(1)` is seconds, use `sleep(1000)` in NanoC.
+- `goto`/`gosub` become functions/loops; `str$` becomes `str()`. NanoBasic
+  `daytime$` is not available in NanoC; use `millis()` or omit the time.
 - `ta_send_cmd`/`ta_req_data(_s)` may be used as plain statements; their result
   is discarded. Assign it (`g_rc = ta_send_cmd(...)`) if you need the status.
   This needs **nanoclib >= 0.2.5**; older cores reject bare value-returning
