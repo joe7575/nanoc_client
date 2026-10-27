@@ -1,12 +1,16 @@
 # nanoc_client
 
 Python client for the **NanoC** computer running inside a Luanti/Minetest
-server. Connects to the `nanoc_mod` over TCP (optionally TLS) to act as an
-external **terminal** and **source-level debugger**, in parallel to the game.
+server. Connects to the
+[`nanoc_mod`](https://github.com/joe7575/nanoc_mod) over TCP (optionally TLS)
+to act as an external **terminal** and **source-level debugger**, in parallel
+to the game.
 
 The wire contract is defined in the sibling repo
-[`nanoc_lib`](../nanoc_lib) under `doc/protocol.md`. This client implements
-protocol version **2** and validates it during the handshake.
+[`nanoc_lib`](https://github.com/joe7575/nanoc_lib) under
+[`doc/protocol.md`](https://github.com/joe7575/nanoc_lib/blob/main/doc/protocol.md).
+This client implements protocol version **2** and validates it during the
+handshake.
 
 ## Install (development)
 
@@ -42,11 +46,12 @@ macOS and Android/Termux; on Windows install the extra:
 `pip install windows-curses` (or `pip install nanoc-client[windows]`).
 
 Reaching a server on another PC: the server admin can enable TLS
-(`nanoc_bridge_tls`, see the `nanoc_mod` README) or use an SSH tunnel. With TLS
-use `--tls` and one of `--cafile cert.pem` (verified), `--tls-fingerprint
-<sha256>` (pinned) or `--tls-insecure` (testing only). Without TLS the traffic
-is plaintext and protected only by the token — keep it inside a trusted LAN
-and never forward the port on the router.
+(`nanoc_bridge_tls`, see the
+[`nanoc_mod` README](https://github.com/joe7575/nanoc_mod#readme)) or use an
+SSH tunnel. With TLS use `--tls` and one of `--cafile cert.pem` (verified),
+`--tls-fingerprint <sha256>` (pinned) or `--tls-insecure` (testing only).
+Without TLS the traffic is plaintext and protected only by the token — keep it
+inside a trusted LAN and never forward the port on the router.
 
 ### TLS certificate (clients)
 
@@ -316,7 +321,8 @@ control commands. `detach` or disconnect releases the focus.
 - `mock_server.py` – mock server for client testing
 - `dap.py` – Debug Adapter Protocol server (`nanoc-dap`) for editors
 
-The Luanti-side bridge is `nanoc_mod/src/bridge.lua`.
+The Luanti-side bridge is
+[`nanoc_mod/src/bridge.lua`](https://github.com/joe7575/nanoc_mod/blob/main/src/bridge.lua).
 
 ## License
 
