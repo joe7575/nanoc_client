@@ -46,11 +46,11 @@
     }
   },
   "nanoc_docs": {
-    "commit": "55bd8443edf3ec918cf0e28e6d47107cd0d2a889",
+    "commit": "cef918a0a881f71dace23f402062ddf8931574c4",
     "dirty": false
   },
   "nanoc_mod": {
-    "commit": "a214740f728ffef25f53638b03c6aeb8b2c3cd97",
+    "commit": "e49c7dc5f2a4fdd3700964e2f9f5e36c63c8bab8",
     "dirty": false
   }
 }

@@ -609,6 +609,8 @@ str8 result = left(s, 5)    // OK
 left(s, 5)                  // ERROR: syntax error
 ```
 
+External (host) functions with a return value can be called as a statement; the result is then discarded.
+
 Examples:
 
 ```c
