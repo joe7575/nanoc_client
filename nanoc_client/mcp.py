@@ -69,7 +69,9 @@ TOOLS = [
     {
         "name": "nanoc_push",
         "description": "Upload and compile a NanoC program to the controller. "
-                       "Returns the compiler output (empty on success).",
+                       "Overwrites the stored program; use nanoc_program_get "
+                       "first if it must be preserved. Returns the compiler "
+                       "output (empty on success).",
         "inputSchema": {"type": "object", "properties": {
             "text": _STR, "file": _STR, **_CONN}},
     },
@@ -96,7 +98,10 @@ TOOLS = [
     },
     {
         "name": "nanoc_exec",
-        "description": "Upload, run and read in one call (write -> run -> read).",
+        "description": "Upload, run and read in one call (write -> run -> read). "
+                       "Overwrites the stored program permanently; use "
+                       "nanoc_program_get first if the controller runs a "
+                       "production program.",
         "inputSchema": {"type": "object", "properties": {
             "text": _STR, "file": _STR, "seconds": _NUM, **_CONN}},
     },

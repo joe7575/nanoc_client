@@ -87,6 +87,9 @@ normally do not have these. Use the GitHub repositories:
   discarded) on **nanoclib >= 0.2.5**; inside functions with parameters use
   **>= 0.2.6** (earlier versions corrupted the parameters). Assign it
   (`g_rc = ta_send_cmd(...)`) when you need the status.
+- `ta_send_cmd`/`ta_req_data(_s)` always take three arguments: numeric topics
+  need an `int32[]` array reference, string topics a string. A scalar payload
+  is a compile error on **nanoclib >= 0.2.7**.
 - Recipe lists repeat duplicate inputs as separate slots; sum them per item
   name before checking stock or feeding a machine.
 

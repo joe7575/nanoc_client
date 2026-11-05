@@ -250,4 +250,5 @@ func example(int32 param) {    // param is LOCAL
 - No multi-dim arrays
 - At most 2 string function results (`left()`, `mid()`, `hex()`, `+`, ...) per statement; use `str8` variables for more
 - No function-local arrays (declare arrays globally or pass via `int32[]` parameter)
+- External functions may require an `int32[]` array reference or a string; pass an array even for an empty payload (`int32 p[0]`)
 - `arr[i]++` not supported, use `arr[i] = arr[i] + 1`

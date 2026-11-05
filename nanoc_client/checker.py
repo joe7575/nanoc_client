@@ -39,6 +39,7 @@ BUILTINS = {
     "ta_req_data", "ta_req_data_s",
     "ta_recv",
     "ta_recv_sig", "ta_sig_port", "ta_sig_val",
+    "hold", "release", "dclr", "dputs", "time", "daytime", "daytime$",
     "rnd", "abs", "len", "val", "instr", "string$", "string", "free",
     "left$", "left", "right$", "right", "mid$", "mid",
     "str$", "str", "hex$", "hex",

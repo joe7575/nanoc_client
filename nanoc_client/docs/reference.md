@@ -291,6 +291,10 @@ printf("Sum after: %d\n", sumArray(data, 3))   // Output: 12
 
 **Note:** Array parameters are always passed by reference. Modifications inside the function affect the original array.
 
+Host-provided external functions may require an array reference or a string;
+a scalar is rejected at compile time. Pass an array even for an empty payload
+(for example `int32 p[0]`).
+
 ### Function with Return Value
 
 To return a value, specify the return type after `func`:

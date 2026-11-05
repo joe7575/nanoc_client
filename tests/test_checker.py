@@ -33,6 +33,14 @@ class TestChecker(unittest.TestCase):
     def test_log_is_known(self):
         self.assertEqual(check('log("started")\n'), [])
 
+    def test_techage_helpers_are_known(self):
+        code = ('hold()\n'
+                'release()\n'
+                'dclr(1)\n'
+                'dputs(1, 0, "x")\n'
+                'printf("%s %d %d\\n", daytime$(0), time(), daytime())\n')
+        self.assertEqual(check(code), [])
+
 
 if __name__ == "__main__":
     unittest.main()

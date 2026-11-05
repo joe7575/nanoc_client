@@ -17,6 +17,17 @@ Numeric payloads are `int32[]` arrays (`int32 p[0]` has one element,
 topic: `ta_send_cmd` uses strings for topics >= 64, `ta_req_data(_s)` for
 topics >= 192; all other topics use numeric arrays.
 
+The third argument is **always required**. A scalar payload is a compile error
+(nanoclib >= 0.2.7), not a "no payload" shortcut:
+
+```c
+int32 q[0]
+q[0] = 0
+ta_req_data(nr, 130, q)      // correct
+// ta_req_data(nr, 130)      // error: array or string required
+// ta_send_cmd(nr, 2, 3)     // error: array or string expected
+```
+
 ## Pusher (ta4_pusher)
 
 | Topic | Kind | Payload | Meaning |
@@ -207,7 +218,8 @@ stops.
 ## NanoC notes for plant programs
 
 - `hold`/`release` work like in NanoBasic (buffer commands, send together).
-  `sleep(1)` is seconds, use `sleep(1000)` in NanoC.
+  Stopping or uploading a program discards a pending hold queue, so commands
+  run immediately afterwards. `sleep(1)` is seconds, use `sleep(1000)` in NanoC.
 - `goto`/`gosub` become functions/loops; `str$` becomes `str()`.
   `time()`, `daytime()` and `daytime$(british)` provide the game clock.
 - `dclr`/`dputs` are available as helpers (see the display section).
@@ -230,3 +242,12 @@ stops.
   words.
 - `sleep(ms)`; `millis()`; `key()` returns one byte (-1 when empty), so build
   numbers from byte values or wait for newline 10/13.
+- Never send and check in one statement (`printf("...", ta_send_cmd(...),
+  ta_req_data(...))`): evaluation order is not guaranteed. Send, `sleep()`,
+  then read.
+- `nanoc_exec` overwrites the program stored on the controller. Use
+  `nanoc_program_get` first if the controller runs a production program.
+- When a command "does nothing": check the status is 0 (accepted, not
+  necessarily executed), check the payload is an array/string (not a scalar),
+  verify the node number with `nanoc_scan`, and check the real state via the
+  node name (e.g. `ta4_signaltower_red`), not only via a topic request.

@@ -224,7 +224,9 @@ nanoc tui   --token T                         # open the curses terminal view
 Connection flags: `--host` (127.0.0.1), `--port` (41100), `--token` (from the
 controller form), `--tls`, `--cafile`, `--tls-fingerprint`, `--tls-insecure`.
 `nanoc exec` is the one-shot loop for automation: write → exec → read output →
-improve.
+improve. It overwrites the program stored on the controller; save it first
+(MCP `nanoc_program_get` or the VS Code download) if a production program must
+be preserved.
 
 A newly placed controller with an empty program produces no terminal output.
 Use `nanoc ping --token T` to check TLS/token/bridge and show controller

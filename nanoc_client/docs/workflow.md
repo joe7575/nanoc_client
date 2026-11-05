@@ -30,21 +30,37 @@ controller. Without it the tools fail.
    or `OK`.
 6. `nanoc_exec` — upload, compile, run and read the terminal output in one call.
    If the compile fails, the returned text starts with `compile failed:`.
+   **It overwrites the program stored on the controller permanently.** Use
+   `nanoc_program_get` first if the controller may run a production program.
 7. Refine and repeat. Use `nanoc_program_get` to read what is currently stored,
    `nanoc_run` / `nanoc_stop` to resume/pause without uploading.
+
+## When a command does nothing
+
+1. Status `0` only means "accepted", not "executed".
+2. Verify the node number with `nanoc_scan`; do not guess.
+3. Check the payload type. Numeric topics need an `int32[]` array (never a
+   scalar); string topics need a string. Both Techage calls always take three
+   arguments.
+4. Do not send and check in one statement: send, `sleep()`, then read.
+5. Verify the real block state via its **node name** when possible (e.g.
+   `techage:ta4_signaltower_red`), not only via a topic with a fallback value.
 
 ## Program basics
 
 ```c
 func main() {
     int32 n = 6
-    printf("chest %d: %d\n", n, ta_req_data(n, 131, [0]))
+    int32 p[0]
+    p[0] = 0
+    printf("chest %d: %d\n", n, ta_req_data(n, 131, p))
 }
 ```
 
 - `func` declares a function (no `void`); statements end at the line end
   (`;` only separates statements on one line).
-- Types: `int32`, `uint32`, `str8`, `u8`, `u16`, `u32`. No floats.
+- Types: `int32`, `str8`. `u8()`, `u16()`, `u32()` are byte-access functions
+  for arrays, not variable types. No floats.
 - Comments: `//`. Blocks: `{ }`. Equality: `==`, inequality: `!=`.
 - Arrays: `int32 a[10]`; pass arrays by reference with `int32[]` parameters.
 - String literals: `str8 name = "text"`. Escapes `\n`, `\t`, `\\`, `\"`.
