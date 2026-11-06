@@ -21,8 +21,12 @@ Colour extension (client only, reserved)
 termlib has no colour commands. We reserve two extra escapes that termlib
 currently ignores (it would print them literally in-game):
 
-* ``ESC 8 <fg>`` - set foreground colour (0..15, 255 = default)
-* ``ESC 9 <bg>`` - set background colour (0..15, 255 = default)
+* ``ESC 8 <fg>`` - set foreground colour (0..15)
+* ``ESC 9 <bg>`` - set background colour (0..15)
+
+Use only 0..15. Byte 255 is not valid UTF-8; termlib stores output bytes
+literally, so an in-game terminal shows ``<invalid UTF-8 string>`` for the
+whole line. Use 7 (white) as a neutral colour instead.
 
 Programs that do not use them stay 100%% compatible with the in-game
 terminal; front ends that support colour (ANSI/Tk) render them.

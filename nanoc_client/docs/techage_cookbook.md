@@ -121,7 +121,7 @@ const USE_COLOR = 0
 printf("\27%c%c", 2, 3)                   // ESC 2 3: go to row 3, clear it
 if (USE_COLOR == 1) { printf("\27%c%c", 8, 2) }   // green
 printf("phase %d\n", phase)
-if (USE_COLOR == 1) { printf("\27%c%c", 8, 255) } // default again
+if (USE_COLOR == 1) { printf("\27%c%c", 8, 7) } // white (not 255: invalid UTF-8)
 ```
 
 A complete program is `nanoc://examples/signal_tower`.
