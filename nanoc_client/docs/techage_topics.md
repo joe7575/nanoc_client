@@ -14,7 +14,46 @@
 
 
 
-# BEP 005: Techage Commands
+# BEP-005: Techage Commands
+
+This document lists the command and request topics. It describes the wire
+protocol, not a specific programming language.
+
+## How to call these from NanoC
+
+```c
+ta_send_cmd(number, topic, payload)      // -> status (0 = accepted)
+ta_req_data(number, topic, payload)      // -> number
+ta_req_data_s(number, topic, payload)    // -> string
+```
+
+All three take **exactly three** arguments. The payload column below shows the
+array contents, e.g. `[num]` or `[idx, num]`. In NanoC that is an **array
+reference**, never a scalar:
+
+```c
+int32 p[2]
+p[0] = 1        // idx
+p[1] = 2        // num
+ta_send_cmd(1234, 3, p)     // Signal Lamp: lamp 1 -> amber
+
+int32 q[0]
+q[0] = 0
+int32 color = ta_req_data(1234, 130, q)   // request the current colour
+```
+
+A scalar payload is a compile error (nanoclib >= 0.2.7):
+
+```c
+// ta_send_cmd(1234, 2, 3)   // error: array or string expected
+// ta_req_data(1234, 130)    // error: array or string parameter required
+```
+
+Payload type by topic: `ta_send_cmd` uses a string for topics >= 64,
+`ta_req_data`/`ta_req_data_s` for topics >= 192. All other topics use numeric
+arrays. A `-` in the payload column means "no payload" — still pass an array.
+
+Do not send and read in the same statement; send, wait, then read.
 
 ### Send Command / Trigger Action
 

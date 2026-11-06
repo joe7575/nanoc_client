@@ -200,6 +200,54 @@ breakpoint()               // breakpoint in the source code (debugger)
 NULL                       // null pointer constant
 ```
 
+### Host functions (Techage, timing, terminal)
+
+The host provides external functions. Their signatures are fixed, so a wrong
+argument count or payload type is a **compile error**.
+
+```c
+ta_send_cmd(number, topic, payload)      // -> status (0 = accepted)
+ta_req_data(number, topic, payload)      // -> number
+ta_req_data_s(number, topic, payload)    // -> string
+```
+
+All three take **exactly three** arguments. Payload type by topic:
+
+| Function | int payload (array) | string payload |
+|---|---|---|
+| `ta_send_cmd` | topic < 64 | topic >= 64 |
+| `ta_req_data` / `ta_req_data_s` | topic < 192 | topic >= 192 |
+
+The payload is an **array reference**, never a scalar — also when the topic
+needs no payload:
+
+```c
+int32 p[0]
+p[0] = 3
+ta_send_cmd(1234, 2, p)     // correct
+// ta_send_cmd(1234, 2, 3)  // error: array or string expected
+// ta_req_data(1234, 130)   // error: array or string parameter required
+```
+
+Other host functions:
+
+```c
+sleep(ms)                  // pause; resolution ~0.1 s (server tick)
+millis()                   // milliseconds since program start
+log("text")                // message to the external debugger
+key()                      // next key byte, or -1
+hold() / release()         // buffer commands, send them together
+dclr(nr)                   // clear a display (topic 17)
+dputs(nr, row, text)       // display text (topic 67 / 68)
+time() / daytime() / daytime$(british)   // game clock
+ta_signal(nr, 0|1)         // on/off signal shortcut
+ta_recv(cmd[])             // read an incoming command into cmd[]
+```
+
+Full list and topic table: NanoC manual
+<https://github.com/joe7575/nanoc_mod/blob/main/doc/manual.md> and
+BEP 005 <https://github.com/joe7575/beduino/blob/main/BEPs/bep-005_ta_cmnd.md>.
+
 ## PROGRAM STRUCTURE
 
 ```c

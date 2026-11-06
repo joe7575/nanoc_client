@@ -20,6 +20,7 @@
   - [Functions](#functions)
     - [Function Definition](#function-definition)
     - [Array Reference Parameters](#array-reference-parameters)
+    - [Host-provided functions](#host-provided-functions)
     - [Function with Return Value](#function-with-return-value)
     - [Local Variables](#local-variables)
     - [return Statement](#return-statement)
@@ -289,11 +290,47 @@ doubleArray(data, 3)
 printf("Sum after: %d\n", sumArray(data, 3))   // Output: 12
 ```
 
-**Note:** Array parameters are always passed by reference. Modifications inside the function affect the original array.
+**Note:** Parameters are passed by value, except arrays: array parameters are
+always passed by reference. Modifications inside the function affect the
+original array.
 
-Host-provided external functions may require an array reference or a string;
-a scalar is rejected at compile time. Pass an array even for an empty payload
-(for example `int32 p[0]`).
+### Host-provided functions
+
+The VM can be extended by the host with external functions. Their signatures
+are fixed at compile time, so a wrong argument count or a wrong payload type is
+a **compile error**, not a runtime surprise.
+
+The Techage functions are the ones you will use most:
+
+```c
+ta_send_cmd(number, topic, payload)      // -> status (0 = accepted)
+ta_req_data(number, topic, payload)      // -> number
+ta_req_data_s(number, topic, payload)    // -> string
+```
+
+All three take **exactly three** arguments. The payload type depends on the
+topic:
+
+| Call | numeric topics | string topics |
+|---|---|---|
+| `ta_send_cmd` | `< 64` | `>= 64` |
+| `ta_req_data` / `ta_req_data_s` | `< 192` | `>= 192` |
+
+Numeric payloads must be an **array reference**, never a scalar. Pass an array
+even when the topic needs no payload:
+
+```c
+int32 p[0]
+p[0] = 3
+ta_send_cmd(1234, 2, p)     // correct
+// ta_send_cmd(1234, 2, 3)  // error: array or string expected
+// ta_req_data(1234, 130)   // error: array or string parameter required
+```
+
+The full list of host functions (Techage calls, `sleep`, `millis`, `log`,
+`key`, `hold`/`release`, display helpers, clock) is documented in the NanoC
+manual:
+<https://github.com/joe7575/nanoc_mod/blob/main/doc/manual.md>
 
 ### Function with Return Value
 

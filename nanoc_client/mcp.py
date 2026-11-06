@@ -114,6 +114,15 @@ _DOCS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs")
 # the package (see docs/README.md and tools/sync_docs.py).
 RESOURCES = [
     {
+        "uri": "nanoc://index",
+        "name": "Documentation index",
+        "description": "Start here: which document answers which question, the "
+                       "Techage call signature and payload rule, and where each "
+                       "file comes from.",
+        "mimeType": "text/markdown",
+        "file": "README.md",
+    },
+    {
         "uri": "nanoc://workflow",
         "name": "NanoC workflow",
         "description": "How to drive a NanoC controller over these tools: "
