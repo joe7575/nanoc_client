@@ -17,8 +17,8 @@ Three things come from the **server owner**, one from **the game**.
 |---|---|---|
 | **Host** (address) | ask the server owner | `play.example.org` |
 | **Port** | ask the server owner | `41100` |
-| **TLS fingerprint** | ask the server owner | `01:6A:FA:52:...:10:7A` |
-| **Token** | your controller, in game | `265413dd...cc8b` |
+| **TLS fingerprint** | ask the server owner | `AB:CD:EF:12:...:34:56` |
+| **Token** | your controller, in game | `<your token>` |
 
 ### Ask the server owner for
 
@@ -108,8 +108,8 @@ nanoc ping \
   --host play.example.org \
   --port 41100 \
   --tls \
-  --tls-fingerprint "01:6A:FA:52:...:10:7A" \
-  --token 265413dd924cc430748d82c8e409cc8b
+  --tls-fingerprint "AB:CD:EF:12:...:34:56" \
+  --token YOUR_TOKEN_HERE
 ```
 
 ### Windows (PowerShell)
@@ -119,14 +119,14 @@ nanoc ping `
   --host play.example.org `
   --port 41100 `
   --tls `
-  --tls-fingerprint "01:6A:FA:52:...:10:7A" `
-  --token 265413dd924cc430748d82c8e409cc8b
+  --tls-fingerprint "AB:CD:EF:12:...:34:56" `
+  --token YOUR_TOKEN_HERE
 ```
 
 A working connection prints something like:
 
 ```
-Controller 1776638 "C1" at (889, -107, 2076) available
+Controller 6845 "C1" at (120, 45, 890) available
   owner you, running, program loaded, nanoclib 0.2.8
 ```
 
@@ -158,9 +158,9 @@ Create a folder `.vscode` in your project folder and inside it a file
       "env": {
         "NANOC_HOST": "play.example.org",
         "NANOC_PORT": "41100",
-        "NANOC_TOKEN": "265413dd924cc430748d82c8e409cc8b",
+        "NANOC_TOKEN": "YOUR_TOKEN_HERE",
         "NANOC_TLS": "1",
-        "NANOC_TLS_FINGERPRINT": "01:6A:FA:52:...:10:7A"
+        "NANOC_TLS_FINGERPRINT": "AB:CD:EF:12:...:34:56"
       }
     }
   }
@@ -240,7 +240,7 @@ A live view of the controller's screen, including colours and keyboard input:
 
 ```bash
 nanoc tui --host play.example.org --port 41100 --tls \
-  --tls-fingerprint "01:6A:FA:52:...:10:7A" --token <TOKEN>
+  --tls-fingerprint "AB:CD:EF:12:...:34:56" --token <TOKEN>
 ```
 
 Keys: type and press Enter to send a line; **F1–F8** send the function keys;
@@ -276,7 +276,7 @@ program and inspect variables.
       "port": 41100,
       "token": "<YOUR TOKEN>",
       "tls": true,
-      "tlsFingerprint": "01:6A:FA:52:...:10:7A",
+      "tlsFingerprint": "AB:CD:EF:12:...:34:56",
       "source": "${file}",
       "program": "${file}",
       "upload": true
