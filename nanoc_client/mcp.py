@@ -221,6 +221,16 @@ RESOURCES = [
         "mimeType": "text/plain",
         "file": "examples/blinds_demo.nanoc",
     },
+    {
+        "uri": "nanoc://examples/signal_tower",
+        "name": "Example: signal tower",
+        "description": "Smallest useful example: cycle one TA4 signal tower "
+                       "through green/amber/red with ta_send_cmd, and rewrite a "
+                       "status line on a fixed terminal row (colour only works "
+                       "in nanoc-tui, not on the in-game terminal).",
+        "mimeType": "text/plain",
+        "file": "examples/signal_tower.nanoc",
+    },
 ]
 
 

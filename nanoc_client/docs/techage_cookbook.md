@@ -86,6 +86,46 @@ in multiple slots; count them to get the required amount.
 | 2 | send | `[0\|1\|2\|3]` | off / green / amber / red |
 | 130 | request | - | current colour |
 
+The colour is also encoded in the **node name** (`ta4_signaltower_green`,
+`_amber`, `_red`; plain `ta4_signaltower` = off). That is the reliable way to
+check the state — topic 130 falls back to `0` (off) when the `state` meta is
+empty.
+
+Topic 130 returns a number; `ta_req_data` needs the payload array:
+
+```c
+int32 p[1]
+p[0] = 2                                  // 2 = amber
+ta_send_cmd(nr, 2, p)                     // -> status 0
+sleep(1000)
+int32 q[1]
+q[0] = 0
+int32 c = ta_req_data(nr, 130, q)         // -> 2
+```
+
+## Terminal output for status lines
+
+`printf` output goes to the controller terminal. Two things matter for status
+lines:
+
+- `\27\2<row>` clears that row and moves the cursor there (rows 1..20), so a
+  value can be rewritten in place instead of scrolling.
+- **Colour works only in the external view.** The in-game termlib terminal has
+  no colour commands and prints unknown escapes literally. `nanoc-tui` (and
+  ANSI front ends) understand `\27\8<fg>` / `\27\9<bg>` (0..15, 255 =
+  default). Guard them behind a flag, otherwise the in-game screen shows stray
+  characters.
+
+```c
+const USE_COLOR = 0
+printf("\27%c%c", 2, 3)                   // ESC 2 3: go to row 3, clear it
+if (USE_COLOR == 1) { printf("\27%c%c", 8, 2) }   // green
+printf("phase %d\n", phase)
+if (USE_COLOR == 1) { printf("\27%c%c", 8, 255) } // default again
+```
+
+A complete program is `nanoc://examples/signal_tower`.
+
 ## Door controller II (ta3_doorcontroller2)
 
 | Topic | Kind | Payload | Meaning |

@@ -20,6 +20,10 @@
       "file": "examples/oven_control.nanoc",
       "root": "nanoc_mod"
     },
+    "examples/signal_tower.nanoc": {
+      "file": "examples/signal_tower.nanoc",
+      "root": "nanoc_mod"
+    },
     "examples/techage_monitor.nanoc": {
       "file": "examples/techage_monitor.nanoc",
       "root": "nanoc_mod"
@@ -50,7 +54,7 @@
     "dirty": false
   },
   "nanoc_mod": {
-    "commit": "18703b99ac5ab2cb9b986c17bc0fec830f985c2a",
+    "commit": "f691d8c47b3d2e46642846dbae7c149ae8eb0a60",
     "dirty": false
   }
 }
