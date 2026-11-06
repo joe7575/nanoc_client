@@ -350,6 +350,12 @@ Program output appears in the **NanoC terminal** (open it with `Ctrl+Alt+T`).
 
 ---
 
+## AI-assisted development
+
+Parts of the source code and documentation in this repository were created with
+the help of AI assistants (large language models). All changes are reviewed and
+tested by the maintainer.
+
 ## License
 
 AGPL-3.0-or-later. Source: <https://github.com/joe7575/nanoc_client>
