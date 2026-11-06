@@ -239,7 +239,8 @@ str8 name = "Hello"
 str8 empty = ""
 ```
 
-`str8` function parameters are read-only.
+`str8` function parameters are read-only. Local `str8` declarations inside a
+function are not supported; use a global `str8` for mutable strings.
 
 ---
 
@@ -357,7 +358,8 @@ later in the file.
 
 ### Local Variables
 
-All variables declared inside a function are **local** (stack-based):
+All variables declared inside a function are **local** (stack-based), except
+`str8`: local string variables are not supported (use a global `str8`):
 
 ```c
 func calculate(int32 input) {
@@ -580,6 +582,8 @@ Format specifiers:
 - `%h` - hexadecimal integer (uppercase)
 - `%s` - string
 - `%%` - literal percent sign
+
+Width and zero padding are supported, e.g. `%2d`, `%02d`, `%-3d`, `%4s`.
 
 Escape sequences:
 - `\n` - newline

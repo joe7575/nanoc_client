@@ -33,6 +33,15 @@ class TestChecker(unittest.TestCase):
     def test_log_is_known(self):
         self.assertEqual(check('log("started")\n'), [])
 
+    def test_local_str8_is_rejected(self):
+        code = ('func str8 f() {\n'
+                '  str8 s = "x"\n'
+                '  s = s + "y"\n'
+                '  return s\n'
+                '}\n')
+        errors = check(code)
+        self.assertTrue(any("local str8" in m for _, m in errors))
+
     def test_techage_helpers_are_known(self):
         code = ('hold()\n'
                 'release()\n'

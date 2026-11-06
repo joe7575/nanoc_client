@@ -6,6 +6,7 @@ catches the most common mistakes without a full compile:
   - unbalanced parentheses / braces / brackets
   - calls to unknown functions
   - use of undeclared variables (typos)
+  - local `str8` declarations inside functions (not supported)
 
 Findings are (line, message); the CLI prints them GCC-style so editors jump to
 the line.
@@ -125,10 +126,31 @@ def _check_balance(code):
     return errors
 
 
+def _check_local_str8(tokens):
+    errors = []
+    stack = []
+    func_pending = False
+    for i, (tok, lineno) in enumerate(tokens):
+        if tok == "func":
+            func_pending = True
+        elif tok == "{":
+            stack.append("func" if func_pending else "block")
+            func_pending = False
+        elif tok == "}":
+            if stack:
+                stack.pop()
+        elif tok == "str8" and "func" in stack:
+            nxt = tokens[i + 1][0] if i + 1 < len(tokens) else ""
+            if _is_ident(nxt):
+                errors.append((lineno,
+                    "local str8 variables are not supported; use a global str8"))
+    return errors
+
+
 def check(code):
     """Return a sorted, de-duplicated list of (line, message)."""
-    errors = list(_check_balance(code))
     tokens = _tokenize(code)
+    errors = list(_check_balance(code)) + _check_local_str8(tokens)
     n = len(tokens)
 
     declared = set(PREDEFINED)

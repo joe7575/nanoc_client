@@ -167,6 +167,10 @@ dputs(display, 0, "closed")
 dputs(display, 1, "12:30")
 ```
 
+For a fixed status line use `dputs(display, 1, text)` (set/overwrite) instead
+of row 0 (add line/scroll). The TA4 displayXXL has 8 rows and 16 columns
+(lcdlib derives the column count as `rows * 2`).
+
 Raw form (topic 68 needs a **space** between row and text):
 
 ```c
@@ -261,7 +265,8 @@ stops.
   Stopping or uploading a program discards a pending hold queue, so commands
   run immediately afterwards. `sleep(1)` is seconds, use `sleep(1000)` in NanoC.
 - `goto`/`gosub` become functions/loops; `str$` becomes `str()`.
-  `time()`, `daytime()` and `daytime$(british)` provide the game clock.
+  `time()` is game time in seconds, `daytime()` minutes (0–1440), and
+  `daytime$(british)` the clock string.
 - `dclr`/`dputs` are available as helpers (see the display section).
 - `ta_send_cmd`/`ta_req_data(_s)` may be used as plain statements; their result
   is discarded. Assign it (`g_rc = ta_send_cmd(...)`) if you need the status.
