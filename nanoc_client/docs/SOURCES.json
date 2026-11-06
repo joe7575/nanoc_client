@@ -4,6 +4,10 @@
     "dirty": false
   },
   "files": {
+    "examples/README.md": {
+      "file": "examples/README.md",
+      "root": "nanoc_mod"
+    },
     "examples/blinds_demo.nanoc": {
       "file": "examples/blinds_demo.nanoc",
       "root": "nanoc_mod"
@@ -32,6 +36,10 @@
       "file": "examples/termlib_demo.nanoc",
       "root": "nanoc_mod"
     },
+    "examples/world_data.nanoc": {
+      "file": "examples/world_data.nanoc",
+      "root": "nanoc_mod"
+    },
     "language.md": {
       "file": "nanoc_llm_prompt.md",
       "root": "nanoc_docs"
@@ -54,7 +62,7 @@
     "dirty": false
   },
   "nanoc_mod": {
-    "commit": "c52af12123ee64dfe5c5b7913da46bf247e3b399",
+    "commit": "80ba2c75f4290cc7cd642309a9cdcb4092b9b579",
     "dirty": false
   }
 }

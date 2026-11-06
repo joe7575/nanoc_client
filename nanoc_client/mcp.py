@@ -171,6 +171,15 @@ RESOURCES = [
         "file": "techage_topics.md",
     },
     {
+        "uri": "nanoc://examples",
+        "name": "Example overview",
+        "description": "Overview and table of all NanoC examples: blinds, "
+                       "server-data display, factory/fab/furnace control, "
+                       "signal tower, monitoring and terminal demos.",
+        "mimeType": "text/markdown",
+        "file": "examples/README.md",
+    },
+    {
         "uri": "nanoc://examples/techage_monitor",
         "name": "Example: techage monitor",
         "description": "Monitor input chests, output chest and autocrafter "
@@ -230,6 +239,15 @@ RESOURCES = [
                        "in nanoc-tui, not on the in-game terminal).",
         "mimeType": "text/plain",
         "file": "examples/signal_tower.nanoc",
+    },
+    {
+        "uri": "nanoc://examples/world_data",
+        "name": "Example: server data display",
+        "description": "Show time, daytime, world age, program uptime and a "
+                       "heartbeat on a TA4 Display II XXL; demonstrates "
+                       "change detection and padding without sprintf.",
+        "mimeType": "text/plain",
+        "file": "examples/world_data.nanoc",
     },
 ]
 

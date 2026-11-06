@@ -44,6 +44,9 @@ COPIES = [
      "examples/blinds_demo.nanoc"),
     ("examples/signal_tower.nanoc", "nanoc_mod",
      "examples/signal_tower.nanoc"),
+    ("examples/world_data.nanoc", "nanoc_mod",
+     "examples/world_data.nanoc"),
+    ("examples/README.md", "nanoc_mod", "examples/README.md"),
 ]
 
 

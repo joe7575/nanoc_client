@@ -12,7 +12,7 @@ Start here. This page is the map, not the manual.
 | look up a topic number | [`techage_topics.md`](techage_topics.md) |
 | see verified behaviour of a specific block | [`techage_cookbook.md`](techage_cookbook.md) |
 | drive a controller over the MCP tools | [`workflow.md`](workflow.md) |
-| see a complete program | [`examples/`](examples/) |
+| see a complete program | [`examples/README.md`](examples/README.md) |
 
 ## The one rule that is easy to get wrong
 
@@ -57,7 +57,7 @@ from git.
 | `reference.md` | [`joe7575/nanoc`](https://github.com/joe7575/nanoc) — `docs/nanoc_reference.md` | the language |
 | `manual.md` | [`joe7575/nanoc_mod`](https://github.com/joe7575/nanoc_mod) — `doc/manual.md` | the in-game computer |
 | `techage_topics.md` | [`joe7575/beduino`](https://github.com/joe7575/beduino) — `BEPs/bep-005_ta_cmnd.md` | the command protocol |
-| `examples/*.nanoc` | [`joe7575/nanoc_mod`](https://github.com/joe7575/nanoc_mod) — `examples/` | example programs |
+| `examples/README.md`, `examples/*.nanoc` | [`joe7575/nanoc_mod`](https://github.com/joe7575/nanoc_mod) — `examples/` | example programs and overview |
 | `techage_cookbook.md` | this repository | verified block behaviour |
 | `workflow.md` | this repository | how to drive the MCP tools |
 
@@ -80,4 +80,5 @@ visible in review.
 
 The same files are served to AI clients as resources: `nanoc://index`,
 `nanoc://language`, `nanoc://reference`, `nanoc://manual`, `nanoc://topics`,
-`nanoc://cookbook`, `nanoc://workflow` and `nanoc://examples/...`.
+`nanoc://cookbook`, `nanoc://workflow`, `nanoc://examples` (overview)
+and `nanoc://examples/...`.

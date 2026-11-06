@@ -55,10 +55,11 @@ normally do not have these. Use the GitHub repositories:
 ## Write and test
 
 - Reference: `nanoc://language` (primer), `nanoc://manual`, `nanoc://reference`,
-  `nanoc://topics`, `nanoc://cookbook`, `nanoc://examples/techage_monitor`,
-  `nanoc://examples/termlib_demo`, `nanoc://examples/factory_control`,
-  `nanoc://examples/fab_control`, `nanoc://examples/oven_control`,
-  `nanoc://examples/blinds_demo`.
+  `nanoc://topics`, `nanoc://cookbook`, `nanoc://examples` (overview),
+  `nanoc://examples/techage_monitor`, `nanoc://examples/termlib_demo`,
+  `nanoc://examples/factory_control`, `nanoc://examples/fab_control`,
+  `nanoc://examples/oven_control`, `nanoc://examples/blinds_demo`,
+  `nanoc://examples/world_data`, `nanoc://examples/signal_tower`.
 - NanoC is C-like but not C: `func` instead of `void`, no floats, `//`
   comments, `{ }` blocks, no semicolons at line end, `int32`/`str8`/`u8`/`u16`/`u32`.
 - Techage calls: `ta_send_cmd(number, topic, payload)` and
