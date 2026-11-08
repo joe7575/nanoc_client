@@ -134,9 +134,14 @@ str8 name = "Hello"
 Arrays are declared with a size in brackets:
 
 ```c
-int32 buffer[100]    // array of 100 elements (indices 0-99)
-int32 data[10]       // 32-bit array
+int32 buffer[100]    // array with indices 0..100 (size + 1)
+int32 data[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 ```
+
+The C-style initializer is supported for global arrays. It fills indices
+starting at 0; values can be numeric expressions or constants. NanoC arrays
+have `size + 1` elements, so `data[10]` remains 0 when only ten values are
+given.
 
 Array elements are accessed with bracket notation:
 

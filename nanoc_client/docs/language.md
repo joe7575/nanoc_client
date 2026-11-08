@@ -29,7 +29,8 @@ You are generating code for **NanoC**, a simple C-like language for embedded sys
 ```c
 int32 x = 0           // signed 32-bit integer
 int32 x = 0xFF        // hex literal (0x prefix supported)
-int32 arr[100]        // array of 100 elements
+int32 arr[100]        // array with indices 0..100 (size + 1)
+int32 fg[4] = {0, 2, 3, 1}  // global array initializer
 str8 name = "Hello"   // string
 const MAX = 0x100     // constant can also use hex literals
 ```
